@@ -58,10 +58,13 @@ export class Masjidi implements IMasjidi {
     return this.prayers.find((e) => e.isAfter(this.now)) ?? this.prayers[0];
   }
   getPreviousPrayer() {
-    return (
-      this.prayers.find((e) => e.isBeforeOrEqual(this.now)) ??
-      this.prayers[this.prayers.length - 1]
-    );
+    for (let i = this.prayers.length - 1; i >= 0; i--) {
+      const prayer = this.prayers[i];
+      if (prayer.isBeforeOrEqual(this.now)) {
+        return prayer;
+      }
+    }
+    return this.prayers[this.prayers.length - 1];
   }
 
   getCurrentInIqamaWaitPrayer() {
