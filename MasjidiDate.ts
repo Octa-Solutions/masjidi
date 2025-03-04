@@ -68,18 +68,19 @@ export type MasjidiMultiDateCondition =
 export namespace MasjidiDate {
   export function factory(gregorian: Date): MasjidiDate {
     const hijri = Hijri.fromGregorian(gregorian);
+    const hours = gregorian.getHours();
     return {
       time: {
-        hours: gregorian.getHours(),
-        hours12: gregorian.getHours() % 12,
-        meridiem: gregorian.getHours() < 12 ? "am" : "pm",
+        hours: hours,
+        hours12: hours === 12 || hours === 0 ? 12 : hours % 12,
+        meridiem: hours < 12 ? "am" : "pm",
         minutes: gregorian.getMinutes(),
-        minuteOfDay: gregorian.getMinutes() + gregorian.getHours() * 60,
+        minuteOfDay: gregorian.getMinutes() + hours * 60,
         seconds: gregorian.getSeconds(),
         secondOfDay:
           gregorian.getSeconds() +
           gregorian.getMinutes() * 60 +
-          gregorian.getHours() * 60 * 60,
+          hours * 60 * 60,
       },
       gregorian: {
         dayOfMonth: gregorian.getDate(),
