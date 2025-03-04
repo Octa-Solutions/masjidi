@@ -1,0 +1,159 @@
+import { Prayer } from "@/core/Prayer";
+import { Hijri } from "@/utils/Hijri";
+import { MasjidiDate } from "./MasjidiDate";
+import { wrapNumber } from "@/utils";
+import { DateUtils } from "@/utils/DateUtils";
+
+export enum MasjidiStatus {
+  Clock = "clock",
+  Prayer = "prayer",
+  Azkar = "azkar",
+}
+export type MasjidiContextualStatus =
+  | { status: MasjidiStatus.Clock; prayer: null }
+  | { status: MasjidiStatus.Azkar | MasjidiStatus.Prayer; prayer: Prayer };
+
+export type MasjidiTimingStatus = {
+  prayer: Prayer;
+  type: "upcoming" | "iqama" | "prayer";
+  secondsLeft: number;
+};
+
+export type MasjidiHadith = {
+  sanad: string;
+  content: string;
+  attribution: string;
+};
+
+export interface IMasjidi {
+  readonly initialNow: Date;
+  readonly hijriDayAdjustment: number;
+  readonly ahadith: MasjidiHadith[];
+  readonly prayers: Prayer[];
+}
+export class Masjidi implements IMasjidi {
+  private now!: MasjidiDate;
+  private hadithIndex = -1;
+
+  constructor(
+    readonly initialNow: Date,
+    readonly hijriDayAdjustment: number,
+    readonly ahadith: MasjidiHadith[],
+    readonly prayers: Prayer[]
+  ) {
+    console.assert(prayers.length > 0, "At least one prayer is required");
+
+    this.setNow(initialNow);
+  }
+
+  setNow(date: Date) {
+    this.now = MasjidiDate.factory(date);
+    return this;
+  }
+  getNow() {
+    return this.now;
+  }
+
+  getUpcomingPrayer() {
+    return this.prayers.find((e) => e.isAfter(this.now)) ?? this.prayers[0];
+  }
+  getPreviousPrayer() {
+    return (
+      this.prayers.find((e) => e.isBeforeOrEqual(this.now)) ??
+      this.prayers[this.prayers.length - 1]
+    );
+  }
+
+  getCurrentInIqamaWaitPrayer() {
+    return this.prayers.find((e) => e.isInIqamaWait(this.now)) ?? null;
+  }
+  getCurrentInPrayerPrayer() {
+    return this.prayers.find((e) => e.isInPrayer(this.now)) ?? null;
+  }
+  getCurrentInAzkarPrayer() {
+    return this.prayers.find((e) => e.isInAzkar(this.now)) ?? null;
+  }
+
+  getCurrentPrayer() {
+    return (
+      this.prayers.find(
+        (e) => e.isInIqamaWait(this.now) || e.isInPrayer(this.now)
+      ) ?? null
+    );
+  }
+  getTimingStatus(): MasjidiTimingStatus {
+    const currentIqamaWaitPrayer = this.getCurrentInIqamaWaitPrayer();
+
+    if (currentIqamaWaitPrayer) {
+      return {
+        prayer: currentIqamaWaitPrayer,
+        type: "iqama",
+        secondsLeft: wrapNumber(
+          currentIqamaWaitPrayer.getTimeLeftForIqama(this.now),
+          0,
+          DateUtils.DAY_IN_SECONDS
+        ),
+      };
+    }
+
+    const currentInPrayerPrayer = this.getCurrentInPrayerPrayer();
+    if (currentInPrayerPrayer) {
+      return {
+        prayer: currentInPrayerPrayer,
+        type: "prayer",
+        secondsLeft: wrapNumber(
+          currentInPrayerPrayer.getTimeLeftForPrayer(this.now),
+          0,
+          DateUtils.DAY_IN_SECONDS
+        ),
+      };
+    }
+
+    const upcomingPrayer = this.getUpcomingPrayer();
+
+    return {
+      prayer: upcomingPrayer,
+      type: "upcoming",
+      secondsLeft: wrapNumber(
+        upcomingPrayer.getTimeLeftForIqamaWait(this.now) +
+          upcomingPrayer.getOverriddenSettings(this.now).upcoming.offset * 60,
+        0,
+        DateUtils.DAY_IN_SECONDS
+      ),
+    };
+  }
+  getStatus(): MasjidiContextualStatus {
+    const inPrayer = this.getCurrentInPrayerPrayer();
+    const inAzkar = this.getCurrentInAzkarPrayer();
+    if (inAzkar) {
+      return {
+        status: MasjidiStatus.Azkar,
+        prayer: inAzkar,
+      } as const;
+    }
+    if (inPrayer) {
+      return {
+        status: MasjidiStatus.Prayer,
+        prayer: inPrayer,
+      } as const;
+    }
+
+    return {
+      status: MasjidiStatus.Clock,
+      prayer: null,
+    } as const;
+  }
+  nextHadith() {
+    this.hadithIndex = (this.hadithIndex + 1) % this.ahadith.length;
+    return this.ahadith[this.hadithIndex];
+  }
+
+  static factory(masjidi: IMasjidi) {
+    return new Masjidi(
+      masjidi.initialNow,
+      masjidi.hijriDayAdjustment,
+      masjidi.ahadith,
+      masjidi.prayers
+    );
+  }
+}
