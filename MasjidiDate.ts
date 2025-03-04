@@ -1,3 +1,4 @@
+import { DateUtils } from "@/utils/DateUtils";
 import { Hijri } from "@/utils/Hijri";
 
 export interface MasjidiDate {
@@ -15,12 +16,14 @@ export interface MasjidiDate {
   readonly gregorian: {
     readonly dayOfMonth: number;
     readonly dayOfWeek: number;
+    readonly weekOfMonth: number;
     readonly month: number;
     readonly year: number;
   };
   readonly hijri: {
     readonly dayOfMonth: number;
     readonly dayOfWeek: number;
+    readonly weekOfMonth: number;
     readonly month: number;
     readonly year: number;
   };
@@ -45,12 +48,14 @@ export namespace MasjidiDate {
       gregorian: {
         dayOfMonth: gregorian.getDate(),
         dayOfWeek: gregorian.getDay() + 1,
+        weekOfMonth: DateUtils.getWeekOfMonth(gregorian),
         month: gregorian.getMonth() + 1,
         year: gregorian.getFullYear(),
       },
       hijri: {
         dayOfMonth: hijri[0],
         dayOfWeek: gregorian.getDay() + 1,
+        weekOfMonth: Hijri.getWeekOfMonth(hijri),
         month: hijri[1],
         year: hijri[2],
       },
