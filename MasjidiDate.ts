@@ -28,6 +28,42 @@ export interface MasjidiDate {
     readonly year: number;
   };
 }
+export type MasjidiDateCondition = DeepPartial<
+  DeepReadonly<{
+    time: {
+      hours: number;
+
+      minutes: number;
+      minuteOfDay: number;
+
+      seconds: number;
+      secondOfDay: number;
+    };
+    gregorian: {
+      dayOfMonth: number;
+      dayOfWeek: number;
+      weekOfMonth: number;
+      month: number;
+      year: number;
+    };
+    hijri: {
+      dayOfMonth: number;
+      dayOfWeek: number;
+      weekOfMonth: number;
+      month: number;
+      year: number;
+    };
+  }>
+>;
+
+export type MasjidiMultiDateCondition =
+  | {
+      start: MasjidiDateCondition;
+      end: MasjidiDateCondition;
+    }
+  | {
+      when: MasjidiDateCondition;
+    };
 
 export namespace MasjidiDate {
   export function factory(gregorian: Date): MasjidiDate {
@@ -61,21 +97,44 @@ export namespace MasjidiDate {
       },
     } as const;
   }
-  export function matches(date: MasjidiDate, test: DeepPartial<MasjidiDate>) {
-    // prettier-ignore
-    return (
-      (test.time?.minutes         === undefined || date.time.minutes === test.time.minutes) &&
-      (test.time?.minuteOfDay     === undefined || date.time.minuteOfDay === test.time.minuteOfDay) &&
-      (test.time?.seconds         === undefined || date.time.seconds === test.time.seconds) &&
-      (test.time?.secondOfDay     === undefined || date.time.secondOfDay === test.time.secondOfDay) &&
-      (test.gregorian?.dayOfMonth === undefined || date.gregorian.dayOfMonth === test.gregorian.dayOfMonth) &&
-      (test.gregorian?.dayOfWeek  === undefined || date.gregorian.dayOfWeek === test.gregorian.dayOfWeek) &&
-      (test.gregorian?.month      === undefined || date.gregorian.month === test.gregorian.month) &&
-      (test.gregorian?.year       === undefined || date.gregorian.year === test.gregorian.year) &&
-      (test.hijri?.dayOfMonth     === undefined || date.hijri.dayOfMonth === test.hijri.dayOfMonth) &&
-      (test.hijri?.dayOfWeek      === undefined || date.hijri.dayOfWeek === test.hijri.dayOfWeek) &&
-      (test.hijri?.month          === undefined || date.hijri.month === test.hijri.month) &&
-      (test.hijri?.year           === undefined || date.hijri.year === test.hijri.year)
-    );
+
+  export function matches(date: MasjidiDate, test: MasjidiDateCondition) {
+    return MasjidiDate.multiConditionMet({ when: test }, date);
+  }
+
+  export function multiConditionMet(
+    condition: MasjidiMultiDateCondition,
+    date: MasjidiDate
+  ) {
+    const start = "when" in condition ? condition.when : condition.start;
+    const end = "when" in condition ? condition.when : condition.end;
+
+    const props = {
+      time: ["hours", "minutes", "minuteOfDay", "seconds", "secondOfDay"],
+      gregorian: ["dayOfMonth", "dayOfWeek", "weekOfMonth", "month", "year"],
+      hijri: ["dayOfMonth", "dayOfWeek", "weekOfMonth", "month", "year"],
+    } as const;
+
+    for (const prop in props) {
+      const propCondition = props[prop as keyof typeof props];
+      for (const conditionProp of propCondition) {
+        // @ts-ignore
+        const startValue = start[prop]?.[conditionProp];
+        // @ts-ignore
+        const endValue = end[prop]?.[conditionProp];
+        // @ts-ignore
+        const dateValue = date[prop]?.[conditionProp];
+
+        if (startValue === undefined || endValue === undefined) continue;
+        if (dateValue === undefined) return false;
+        if (startValue <= endValue) {
+          if (dateValue < startValue || dateValue > endValue) return false;
+        } else {
+          if (dateValue < startValue && dateValue > endValue) return false;
+        }
+      }
+    }
+
+    return true;
   }
 }
