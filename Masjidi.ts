@@ -3,6 +3,7 @@ import { Hijri } from "@/utils/Hijri";
 import { MasjidiDate } from "./MasjidiDate";
 import { wrapNumber } from "@/utils";
 import { DateUtils } from "@/utils/DateUtils";
+import { IslamicEvent, islamicEvents } from "@/data/islamicEvents";
 
 export enum MasjidiStatus {
   Clock = "clock",
@@ -145,6 +146,29 @@ export class Masjidi implements IMasjidi {
       status: MasjidiStatus.Clock,
       prayer: null,
     } as const;
+  }
+  isIslamicEvent(event: IslamicEvent) {
+    const condition = islamicEvents[event as IslamicEvent];
+
+    if (condition instanceof Array) {
+      for (const subCondition of condition) {
+        if (MasjidiDate.multiConditionMet(subCondition, this.now)) return true;
+      }
+      return false;
+    }
+
+    return MasjidiDate.multiConditionMet(condition, this.now);
+  }
+  getIslamicEvents(): IslamicEvent[] {
+    const events: IslamicEvent[] = [];
+
+    for (const event in islamicEvents) {
+      if (this.isIslamicEvent(event as IslamicEvent)) {
+        events.push(event as IslamicEvent);
+      }
+    }
+
+    return events;
   }
   nextHadith() {
     this.hadithIndex = (this.hadithIndex + 1) % this.ahadith.length;
