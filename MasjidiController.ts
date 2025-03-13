@@ -5,6 +5,7 @@ import {
 } from "@/core/Masjidi";
 import { Prayer } from "@/core/Prayer";
 import { wrapNumber } from "@/utils";
+import { CachedFetch } from "@/utils/CachedFetch";
 import { DateUtils } from "@/utils/DateUtils";
 import { EventListener } from "@/utils/EventListener";
 
@@ -135,12 +136,13 @@ export class MasjidiController extends EventListener<{
       return this.timingsPromise;
     }
 
-    this.timingsPromise = fetch(this.options.timingsURL)
-      .then((response) => response.json())
-      .then((timings) => {
-        this.timings = timings;
-        return timings;
-      });
+    this.timingsPromise = CachedFetch.fetch(
+      "json",
+      this.options.timingsURL
+    ).then((timings) => {
+      this.timings = timings;
+      return timings;
+    });
 
     return this.timingsPromise;
   }
