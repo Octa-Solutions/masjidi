@@ -138,6 +138,7 @@ export class Prayer implements IPrayer {
       upcoming: {
         name:
           currentDateOverride?.upcoming?.name ??
+          currentDateOverride?.name ??
           this.upcoming?.name ??
           this.name,
         offset:
