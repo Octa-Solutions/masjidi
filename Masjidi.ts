@@ -48,7 +48,7 @@ export class Masjidi implements IMasjidi {
   }
 
   setNow(date: Date) {
-    this.now = MasjidiDate.factory(date);
+    this.now = MasjidiDate.factory(date, this.hijriDayAdjustment);
     return this;
   }
   getNow() {

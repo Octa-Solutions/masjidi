@@ -66,8 +66,16 @@ export type MasjidiMultiDateCondition =
     };
 
 export namespace MasjidiDate {
-  export function factory(gregorian: Date): MasjidiDate {
-    const hijri = Hijri.fromGregorian(gregorian);
+  export function factory(
+    gregorian: Date,
+    hijriDayAdjustment: number = 0
+  ): MasjidiDate {
+    let hijri = Hijri.fromGregorian(gregorian);
+
+    if (hijriDayAdjustment !== 0) {
+      hijri = Hijri.adjust(hijri, hijriDayAdjustment);
+    }
+
     const hours = gregorian.getHours();
     return {
       time: {
