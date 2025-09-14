@@ -24,6 +24,7 @@ export type IPrayer = Prettify<
     time: number;
     readonly key: string;
     readonly adhanAudioPath: string | null;
+    readonly adhanAudioVolume: number;
     readonly iqamaAudioPath: string | null;
     readonly azkarDuration: number;
     readonly timeOffset: number;
@@ -42,6 +43,7 @@ export class Prayer implements IPrayer {
     readonly key: string,
     readonly name: string,
     readonly adhanAudioPath: string | null,
+    readonly adhanAudioVolume: number,
     readonly iqamaAudioPath: string | null,
     readonly duration: number,
     readonly iqamaWaitDuration: number,
@@ -152,6 +154,7 @@ export class Prayer implements IPrayer {
       prayer.key,
       prayer.name,
       prayer.adhanAudioPath,
+      prayer.adhanAudioVolume,
       prayer.iqamaAudioPath,
       prayer.duration,
       prayer.iqamaWaitDuration,
