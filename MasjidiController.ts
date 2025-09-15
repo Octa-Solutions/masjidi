@@ -9,6 +9,8 @@ import { CachedFetch } from "@/utils/CachedFetch";
 import { DateUtils } from "@/utils/DateUtils";
 import { EventListener } from "@/utils/EventListener";
 
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+
 type MasjidiControllerTiming = {
   [P in string]: string;
 };
@@ -18,6 +20,7 @@ export class MasjidiController extends EventListener<{
   // Tick Events
   init: [];
   tick: [first: boolean];
+  day: [previous: Date | null, current: Date];
 
   // State Events
   state: [MasjidiContextualStatus];
@@ -44,6 +47,7 @@ export class MasjidiController extends EventListener<{
   private previousState: MasjidiContextualStatus | null = null;
   private previousAdhanPrayer: Prayer | null = null;
   private previousIqamaPrayer: Prayer | null | undefined = undefined;
+  private previousDate: Date | null = null;
 
   private tick(first: boolean) {
     console.assert(this.startTime !== null, "Controller has not started");
@@ -63,6 +67,19 @@ export class MasjidiController extends EventListener<{
     const daylightSavingTimeOffset = DateUtils.getDaylightSavingTimeOffset(now);
 
     this.masjidi.setNow(now);
+
+    const previousDateDaysSinceEpoch =
+      this.previousDate === null
+        ? null
+        : Math.floor(this.previousDate.getTime() / ONE_DAY_MS);
+    const currentDateDaysSinceEpoch = Math.floor(now.getTime() / ONE_DAY_MS);
+
+    if (
+      previousDateDaysSinceEpoch === null ||
+      previousDateDaysSinceEpoch !== currentDateDaysSinceEpoch
+    ) {
+      this.dispatch("day", this.previousDate, now);
+    }
 
     const dayIndex = DateUtils.getDayIndex(now);
     const timing = this.timings[dayIndex];
@@ -114,16 +131,28 @@ export class MasjidiController extends EventListener<{
       if (adhanPrayer.adhanAudio) {
         adhanPrayer.adhanAudioPromise!.then(() => {
           if (offset >= 0 && offset < adhanPrayer.adhanAudio!.duration) {
-            this.dispatch("adhan", adhanPrayer, offset, adhanPrayer.adhanAudioVolume);
+            this.dispatch(
+              "adhan",
+              adhanPrayer,
+              offset,
+              adhanPrayer.adhanAudioVolume
+            );
           }
         });
       } else {
-        this.dispatch("adhan", adhanPrayer, offset, adhanPrayer.adhanAudioVolume);
+        this.dispatch(
+          "adhan",
+          adhanPrayer,
+          offset,
+          adhanPrayer.adhanAudioVolume
+        );
       }
     }
     if (iqamaPrayerChanged && iqamaPrayer) {
       this.dispatch("iqama", iqamaPrayer);
     }
+
+    this.previousDate = now;
   }
 
   private hadith() {
