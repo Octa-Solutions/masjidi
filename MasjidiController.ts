@@ -3,18 +3,16 @@ import {
   MasjidiContextualStatus,
   MasjidiHadith,
 } from "@/core/Masjidi";
+import {
+  MasjidiPrayerTimesStrategy,
+  MasjidiPrayerTimings,
+} from "@/core/MasjidiPrayerTimesStrategy";
 import { Prayer } from "@/core/Prayer";
 import { wrapNumber } from "@/utils";
-import { CachedFetch } from "@/utils/CachedFetch";
 import { DateUtils } from "@/utils/DateUtils";
 import { EventListener } from "@/utils/EventListener";
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
-
-type MasjidiControllerTiming = {
-  [P in string]: string;
-};
-type MasjidiControllerTimings = MasjidiControllerTiming[];
 
 export class MasjidiController extends EventListener<{
   // Tick Events
@@ -34,14 +32,17 @@ export class MasjidiController extends EventListener<{
 }> {
   constructor(
     private masjidi: Masjidi,
-    private options: { timingsURL: string; hadithInterval: number }
+    private options: {
+      timesStrategy: MasjidiPrayerTimesStrategy;
+      hadithInterval: number;
+    }
   ) {
     super();
   }
 
   private startTime: number | null = null;
-  private timingsPromise: Promise<MasjidiControllerTimings> | null = null;
-  private timings: MasjidiControllerTimings | null = null;
+  private timingsPromise: Promise<MasjidiPrayerTimings> | null = null;
+  private timings: MasjidiPrayerTimings | null = null;
   private tickInterval: number | null = null;
   private hadithInterval: number | null = null;
   private previousState: MasjidiContextualStatus | null = null;
@@ -64,7 +65,9 @@ export class MasjidiController extends EventListener<{
     const now = new Date(
       this.masjidi.initialNow.getTime() - this.startTime + Date.now()
     );
-    const daylightSavingTimeOffset = DateUtils.getDaylightSavingTimeOffset(now);
+    const daylightSavingTimeOffset = this.options.timesStrategy.isDayLightSaved
+      ? 0
+      : DateUtils.getDaylightSavingTimeOffset(now);
 
     this.masjidi.setNow(now);
 
@@ -86,8 +89,7 @@ export class MasjidiController extends EventListener<{
     for (const prayer of this.masjidi.prayers) {
       console.assert(prayer.key in timing, "prayer not found in timings");
 
-      const timeString = timing[prayer.key];
-      const [hour, minute] = timeString.split(":");
+      const [hour, minute] = timing[prayer.key];
       let time = +hour * 60 + +minute;
 
       time += daylightSavingTimeOffset;
@@ -165,13 +167,12 @@ export class MasjidiController extends EventListener<{
       return this.timingsPromise;
     }
 
-    this.timingsPromise = CachedFetch.fetch(
-      "json",
-      this.options.timingsURL
-    ).then((timings) => {
-      this.timings = timings;
-      return timings;
-    });
+    this.timingsPromise = this.options.timesStrategy
+      .getCalendar()
+      .then((timings) => {
+        this.timings = timings;
+        return timings;
+      });
 
     return this.timingsPromise;
   }
