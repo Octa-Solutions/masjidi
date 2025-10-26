@@ -3,9 +3,15 @@ import { SavedFetch } from "@/utils/SavedFetch";
 
 export class MasjidiAlAdhanAPIPrayerTimesStrategy extends MasjidiPrayerTimesStrategy {
   readonly isDayLightSaved = true;
+  private scopeKey: string = "";
 
   constructor(readonly apiOptions: Record<string, string>) {
     super();
+  }
+
+  withScopedKey(key: string) {
+    this.scopeKey = key;
+    return this;
   }
 
   async getCalendar() {
@@ -17,8 +23,10 @@ export class MasjidiAlAdhanAPIPrayerTimesStrategy extends MasjidiPrayerTimesStra
       aladhanAPIUrl.searchParams.set(key, this.apiOptions[key]);
     }
 
+    const mainKey = "masjidi-al-adhan-api-prayer-times-strategy-data";
+
     return await SavedFetch.fetch(
-      "masjidi-al-adhan-api-prayer-times-strategy-data",
+      this.scopeKey ? `${mainKey}/${this.scopeKey}` : mainKey,
       {
         input: aladhanAPIUrl,
         init: { method: "GET" },
