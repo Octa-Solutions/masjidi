@@ -82,8 +82,8 @@ export class Prayer implements IPrayer {
   isBefore(date: MasjidiDate) {
     return this.getOffsettedTime() < date.time.minuteOfDay;
   }
-  isAfter(date: MasjidiDate) {
-    return this.getOffsettedTime() > date.time.minuteOfDay;
+  isAfter(date: MasjidiDate, offset: number = 0) {
+    return this.getOffsettedTime() + offset > date.time.minuteOfDay;
   }
   isBeforeOrEqual(date: MasjidiDate) {
     return this.getOffsettedTime() <= date.time.minuteOfDay;

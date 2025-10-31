@@ -56,7 +56,11 @@ export class Masjidi implements IMasjidi {
   }
 
   getUpcomingPrayer() {
-    return this.prayers.find((e) => e.isAfter(this.now)) ?? this.prayers[0];
+    return (
+      this.prayers.find((e) =>
+        e.isAfter(this.now, e.getOverriddenSettings(this.now).upcoming.offset)
+      ) ?? this.prayers[0]
+    );
   }
   getPreviousPrayer() {
     for (let i = this.prayers.length - 1; i >= 0; i--) {
