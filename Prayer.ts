@@ -3,6 +3,7 @@ import { MasjidiDate } from "./MasjidiDate";
 import { wrapNumber } from "@/utils";
 
 export type PrayerUpcomingSettings = {
+  activeOnlyWhenInOffset?: boolean;
   name?: string;
   offset?: number;
 };
@@ -132,6 +133,18 @@ export class Prayer implements IPrayer {
       MasjidiDate.matches(date, e.date)
     );
 
+    const upcomingActive = (
+      upcoming: PrayerUpcomingSettings | null | undefined
+    ) =>
+      upcoming
+        ? upcoming.activeOnlyWhenInOffset && upcoming.offset
+          ? this.getOffsettedTime() + upcoming.offset - date.time.minuteOfDay <=
+            upcoming.offset
+            ? upcoming
+            : null
+          : upcoming
+        : null;
+
     return {
       name: currentDateOverride?.name ?? this.name,
       iqamaWaitDuration:
@@ -139,12 +152,14 @@ export class Prayer implements IPrayer {
       duration: currentDateOverride?.duration ?? this.duration,
       upcoming: {
         name:
-          currentDateOverride?.upcoming?.name ??
+          upcomingActive(currentDateOverride?.upcoming)?.name ??
           currentDateOverride?.name ??
-          this.upcoming?.name ??
+          upcomingActive(this.upcoming)?.name ??
           this.name,
         offset:
-          currentDateOverride?.upcoming?.offset ?? this.upcoming?.offset ?? 0,
+          upcomingActive(currentDateOverride?.upcoming)?.offset ??
+          upcomingActive(this.upcoming)?.offset ??
+          0,
       },
     } as const;
   }
