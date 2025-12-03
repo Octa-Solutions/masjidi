@@ -1,11 +1,20 @@
 import { MasjidiPrayerTimesStrategy } from "@/core/MasjidiPrayerTimesStrategy";
 import { SavedFetch } from "@/core/utils/SavedFetch";
 
+type Protocol = "http" | "https";
+type AutoProtocol = Protocol | "auto";
+type AlAdhanCalendarAPIResponse = {
+  [MONTH in string]: { timings: Record<string, string> }[];
+};
+
 export class MasjidiAlAdhanAPIPrayerTimesStrategy extends MasjidiPrayerTimesStrategy {
   readonly isDayLightSaved = true;
   private scopeKey: string = "";
 
-  constructor(readonly apiOptions: Record<string, string>) {
+  constructor(
+    readonly apiOptions: Record<string, string>,
+    readonly protocol: AutoProtocol = "auto"
+  ) {
     super();
   }
 
@@ -14,10 +23,29 @@ export class MasjidiAlAdhanAPIPrayerTimesStrategy extends MasjidiPrayerTimesStra
     return this;
   }
 
+  private getProtocol() {
+    if (this.protocol === "auto") {
+      // @ts-ignore depending on environment
+      const location = globalThis.location;
+
+      if (!location) return "https";
+
+      const protocol = location.protocol.substring(
+        0,
+        location.protocol.length - 1
+      );
+
+      if (protocol !== "http" && protocol !== "https") return "https";
+
+      return protocol;
+    }
+
+    return this.protocol;
+  }
   async getCalendar() {
     // Fixed leap year for 366 days
     const aladhanAPIUrl = new URL(
-      `${location.protocol}//api.aladhan.com/v1/calendar/2024`
+      `${this.getProtocol()}://api.aladhan.com/v1/calendar/2024`
     );
     for (const key in this.apiOptions) {
       aladhanAPIUrl.searchParams.set(key, this.apiOptions[key]);
@@ -32,20 +60,20 @@ export class MasjidiAlAdhanAPIPrayerTimesStrategy extends MasjidiPrayerTimesStra
         init: { method: "GET" },
         state: { api: this.apiOptions },
       }
-    ).then((e) =>
-      Object.values(JSON.parse(e).data).flatMap((e: any) =>
-        e.flatMap((e: any) =>
+    ).then((e) => {
+      return Object.values(JSON.parse(e).data as AlAdhanCalendarAPIResponse)
+        .reduce((acc, currentArr) => acc.concat(currentArr), [])
+        .map((day) =>
           Object.fromEntries(
-            Object.entries(e.timings).map(([k, v]: [string, any]) => [
+            Object.entries(day.timings).map(([k, v]) => [
               k,
               v
                 .split(" ")[0]
                 .split(":")
-                .map((x: string) => +x),
+                .map((x: string) => +x) as [number, number],
             ])
           )
-        )
-      )
-    );
+        );
+    });
   }
 }
