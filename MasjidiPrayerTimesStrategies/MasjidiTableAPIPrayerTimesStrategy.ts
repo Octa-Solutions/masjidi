@@ -1,5 +1,5 @@
 import { MasjidiPrayerTimesStrategy } from "@/core/MasjidiPrayerTimesStrategy";
-import { CachedFetch } from "@/utils/CachedFetch";
+import { CachedFetch } from "@/core/utils/CachedFetch";
 
 export class MasjidiTableAPIPrayerTimesStrategy extends MasjidiPrayerTimesStrategy {
   readonly isDayLightSaved = false;

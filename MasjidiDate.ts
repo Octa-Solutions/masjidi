@@ -1,5 +1,5 @@
-import { DateUtils } from "@/utils/DateUtils";
-import { Hijri } from "@/utils/Hijri";
+import { DateUtils } from "@/core/utils/date/DateUtils";
+import { Hijri } from "@/core/utils/date/Hijri";
 
 export interface MasjidiDate {
   readonly time: {

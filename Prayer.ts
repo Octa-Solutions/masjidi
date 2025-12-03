@@ -1,6 +1,6 @@
+import { MasjidiDate } from "@/core/MasjidiDate";
+import { wrapNumber } from "@/core/utils/math";
 import { GlobalAudioPool } from "@/utils/GlobalAudioPool";
-import { MasjidiDate } from "./MasjidiDate";
-import { wrapNumber } from "@/utils";
 
 export type PrayerUpcomingSettings = {
   activeOnlyWhenInOffset?: boolean;

@@ -1,9 +1,8 @@
+import { IslamicEvent, islamicEvents } from "@/core/data/islamicEvents";
+import { MasjidiDate } from "@/core/MasjidiDate";
 import { Prayer } from "@/core/Prayer";
-import { Hijri } from "@/utils/Hijri";
-import { MasjidiDate } from "./MasjidiDate";
-import { wrapNumber } from "@/utils";
-import { DateUtils } from "@/utils/DateUtils";
-import { IslamicEvent, islamicEvents } from "@/data/islamicEvents";
+import { DateUtils } from "@/core/utils/date/DateUtils";
+import { wrapNumber } from "@/core/utils/math";
 
 export enum MasjidiStatus {
   Clock = "clock",
