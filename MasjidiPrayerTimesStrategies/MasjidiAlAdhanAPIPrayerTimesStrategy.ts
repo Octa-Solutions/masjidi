@@ -12,6 +12,7 @@ export class MasjidiAlAdhanAPIPrayerTimesStrategy extends MasjidiPrayerTimesStra
   private scopeKey: string = "";
 
   constructor(
+    readonly dependencies: { savedFetch: SavedFetch },
     readonly apiOptions: Record<string, string>,
     readonly protocol: AutoProtocol = "auto"
   ) {
@@ -53,27 +54,28 @@ export class MasjidiAlAdhanAPIPrayerTimesStrategy extends MasjidiPrayerTimesStra
 
     const mainKey = "masjidi-al-adhan-api-prayer-times-strategy-data";
 
-    return await SavedFetch.fetch(
-      this.scopeKey ? `${mainKey}/${this.scopeKey}` : mainKey,
-      {
+    return await this.dependencies.savedFetch
+      .fetch(this.scopeKey ? `${mainKey}/${this.scopeKey}` : mainKey, {
         input: aladhanAPIUrl,
         init: { method: "GET" },
         state: { api: this.apiOptions },
-      }
-    ).then((e) => {
-      return Object.values(JSON.parse(e).data as AlAdhanCalendarAPIResponse)
-        .reduce((acc, currentArr) => acc.concat(currentArr), [])
-        .map((day) =>
-          Object.fromEntries(
-            Object.entries(day.timings).map(([k, v]) => [
-              k,
-              v
-                .split(" ")[0]
-                .split(":")
-                .map((x: string) => +x) as [number, number],
-            ])
-          )
-        );
-    });
+      })
+      .then((e) => {
+        return Object.values(
+          JSON.parse(e as string).data as AlAdhanCalendarAPIResponse
+        )
+          .reduce((acc, currentArr) => acc.concat(currentArr), [])
+          .map((day) =>
+            Object.fromEntries(
+              Object.entries(day.timings).map(([k, v]) => [
+                k,
+                v
+                  .split(" ")[0]
+                  .split(":")
+                  .map((x: string) => +x) as [number, number],
+              ])
+            )
+          );
+      });
   }
 }

@@ -1,8 +1,5 @@
 import { PromiseDebounceBase } from "@/core/utils/decorators";
 
-const globalCache = new Map<string, any>();
-const globalDebounceFns = new Map<string, () => Promise<any>>();
-
 type ParseType =
   | "text"
   | "json"
@@ -11,43 +8,48 @@ type ParseType =
   | "bytes"
   | "formData";
 
-const getDebouncedFetch = (name: string, parseType: ParseType, src: string) => {
-  if (globalDebounceFns.has(name)) {
-    return globalDebounceFns.get(name)!;
-  }
-
-  const debounceFn = PromiseDebounceBase(async () => {
-    if (globalCache.has(name)) {
-      return globalCache.get(name);
-    }
-
-    if (GLOBAL_FILES[src]) {
-      if (parseType === "text") {
-        return GLOBAL_FILES[src];
-      }
-      if (parseType === "json") {
-        return JSON.parse(GLOBAL_FILES[src]);
-      }
-    }
-
-    const response = await fetch(src);
-    if (!response.ok) throw new Error(`Failed to fetch ${src}`);
-
-    const result = await response[parseType]();
-
-    globalCache.set(name, result);
-    return result;
-  });
-
-  globalDebounceFns.set(name, debounceFn);
-  return debounceFn;
-};
-
 export class CachedFetch {
-  static async fetch(parseType: ParseType, src: string) {
-    return getDebouncedFetch(src, parseType, src)();
+  private readonly globalFiles: Record<string, string>;
+  private readonly globalCache = new Map<string, any>();
+  private readonly globalDebounceFns = new Map<string, () => Promise<any>>();
+
+  public constructor(options: { globalFiles?: Record<string, string> } = {}) {
+    this.globalFiles = options.globalFiles ?? {};
   }
-  static async preload(name: string, parseType: ParseType, src: string) {
-    await getDebouncedFetch(`preload://${name}`, parseType, src)();
+
+  public async fetch(parseType: ParseType, src: string) {
+    return this.getDebouncedFetch(src, parseType, src)();
+  }
+  public async preload(name: string, parseType: ParseType, src: string) {
+    await this.getDebouncedFetch(`preload://${name}`, parseType, src)();
+  }
+
+  private getDebouncedFetch(name: string, parseType: ParseType, src: string) {
+    if (this.globalDebounceFns.has(name))
+      return this.globalDebounceFns.get(name)!;
+
+    const debounceFn = PromiseDebounceBase(async () => {
+      if (this.globalCache.has(name)) return this.globalCache.get(name);
+
+      if (this.globalFiles[src]) {
+        if (parseType === "text") return this.globalFiles[src];
+        if (parseType === "json") return JSON.parse(this.globalFiles[src]);
+      }
+
+      const response = await fetch(src);
+      if (!response.ok) throw new Error(`Failed to fetch ${src}`);
+
+      const result = await response[parseType]();
+
+      this.globalCache.set(name, result);
+      return result;
+    });
+
+    this.globalDebounceFns.set(name, debounceFn);
+    return debounceFn;
   }
 }
+
+export const provideCachedFetch = (
+  ...params: ConstructorParameters<typeof CachedFetch>
+) => new CachedFetch(...params);

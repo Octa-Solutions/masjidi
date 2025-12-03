@@ -1,5 +1,9 @@
+import { StorageAPI } from "@/core/utils/StorageAPI";
+
 export class SavedFetch {
-  static async fetch(
+  constructor(readonly dependencies: { storage: StorageAPI }) {}
+
+  async fetch(
     key: string,
     {
       input,
@@ -10,10 +14,11 @@ export class SavedFetch {
     const dataKey = `@saved-fetch/data/${key}`;
     const stateKey = `@saved-fetch/state/${key}`;
 
-    const stateString = JSON.stringify(state);
-    const isStateChanged = localStorage.getItem(stateKey) !== stateString;
+    const { [stateKey]: savedState, [dataKey]: savedData } =
+      await this.dependencies.storage.getAll([stateKey, dataKey]);
 
-    const savedData = localStorage.getItem(dataKey);
+    const stateString = JSON.stringify(state);
+    const isStateChanged = savedState !== stateString;
 
     if (!isStateChanged && savedData) {
       return savedData;
@@ -21,8 +26,10 @@ export class SavedFetch {
 
     try {
       const data = await fetch(input, init).then((e) => e.text());
-      localStorage.setItem(dataKey, data);
-      localStorage.setItem(stateKey, stateString);
+      await this.dependencies.storage.setAll({
+        [dataKey]: data,
+        [stateKey]: stateString,
+      });
 
       return data;
     } catch (e) {
@@ -34,3 +41,7 @@ export class SavedFetch {
     }
   }
 }
+
+export const provideSavedFetch = (
+  ...params: ConstructorParameters<typeof SavedFetch>
+) => new SavedFetch(...params);
