@@ -34,7 +34,7 @@ export class MasjidiController extends EventListener<{
     private masjidi: Masjidi,
     private options: {
       timesStrategy: MasjidiPrayerTimesStrategy;
-      hadithInterval: number;
+      hadithInterval?: number;
     }
   ) {
     super();
@@ -192,10 +192,14 @@ export class MasjidiController extends EventListener<{
     this.previousIqamaPrayer = undefined;
     this.startTime = Date.now();
     this.tickInterval = setInterval(() => this.tick(false), 1000);
-    this.hadithInterval = setInterval(
-      () => this.hadith(),
-      this.options.hadithInterval
-    );
+
+    if (this.options.hadithInterval !== undefined) {
+      this.hadithInterval = setInterval(
+        () => this.hadith(),
+        this.options.hadithInterval
+      );
+    }
+
     this.tick(true);
     this.hadith();
   }
