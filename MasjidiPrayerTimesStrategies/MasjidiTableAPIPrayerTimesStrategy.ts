@@ -1,19 +1,36 @@
 import { MasjidiPrayerTimesStrategy } from "@/core/MasjidiPrayerTimesStrategy";
-import { CachedFetch } from "@/core/utils/CachedFetch";
+import {
+  IStringFetcher,
+  IStringFetcherOptions,
+} from "@/core/utils/fetch/IStringFetcher";
+import { ISavedStringFetcher } from "@/core/utils/fetch/SavedFetcher";
 
 export class MasjidiTableAPIPrayerTimesStrategy extends MasjidiPrayerTimesStrategy {
   readonly isDayLightSaved = false;
 
   constructor(
-    readonly dependencies: { cachedFetch: CachedFetch },
-    readonly url: string
+    readonly dependencies: {
+      readonly fetcher: ISavedStringFetcher | IStringFetcher;
+      readonly fetchOptions: IStringFetcherOptions;
+
+      readonly savedKey?: string;
+    }
   ) {
     super();
   }
 
   async getCalendar() {
-    return await this.dependencies.cachedFetch
-      .fetch("json", this.url)
+    return await this.dependencies.fetcher
+      .fetch(
+        Object.assign(this.dependencies.fetchOptions, {
+          key: this.dependencies.savedKey! /* TODO: type assert */,
+
+          state: this.dependencies.fetchOptions.body
+            ? Array.from(this.dependencies.fetchOptions.body.entries())
+            : null,
+        })
+      )
+      .then((e) => JSON.parse(e))
       .then((e) =>
         e.map((e: any) =>
           Object.fromEntries(

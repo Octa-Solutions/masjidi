@@ -79,14 +79,3 @@ export class NoopStorageAPI extends StorageAPI {
 
   async removeAll(keys: string[]): Promise<void> {}
 }
-
-export const provideNativeStorage = (storage: Storage): StorageAPI =>
-  new NativeStorageAPI(storage);
-
-export const provideLocalStorageStorage = (): StorageAPI =>
-  provideNativeStorage(localStorage);
-
-export const provideSessionStorageStorage = (): StorageAPI =>
-  provideNativeStorage(sessionStorage);
-
-export const provideNoopStorage = (): StorageAPI => new NoopStorageAPI();

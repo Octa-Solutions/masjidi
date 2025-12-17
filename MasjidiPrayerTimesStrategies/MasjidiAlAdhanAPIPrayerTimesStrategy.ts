@@ -1,5 +1,7 @@
+import { AlAdhanAPIOptions } from "@/core/MasjidiPrayerTimesStrategies/AlAdhanAPIOptions";
 import { MasjidiPrayerTimesStrategy } from "@/core/MasjidiPrayerTimesStrategy";
-import { SavedFetch } from "@/core/utils/SavedFetch";
+import { IStringFetcher } from "@/core/utils/fetch/IStringFetcher";
+import { ISavedStringFetcher } from "@/core/utils/fetch/SavedFetcher";
 
 type Protocol = "http" | "https";
 type AutoProtocol = Protocol | "auto";
@@ -7,25 +9,26 @@ type AlAdhanCalendarAPIResponse = {
   [MONTH in string]: { timings: Record<string, string> }[];
 };
 
+// TODO: Clean the code
 export class MasjidiAlAdhanAPIPrayerTimesStrategy extends MasjidiPrayerTimesStrategy {
   readonly isDayLightSaved = true;
-  private scopeKey: string = "";
 
   constructor(
-    readonly dependencies: { savedFetch: SavedFetch },
-    readonly apiOptions: Record<string, string>,
-    readonly protocol: AutoProtocol = "auto"
+    readonly dependencies: {
+      readonly fetcher: ISavedStringFetcher | IStringFetcher;
+      readonly apiOptions: AlAdhanAPIOptions;
+      readonly protocol?: AutoProtocol;
+
+      readonly savedKey?: string;
+    }
   ) {
     super();
   }
 
-  withScopedKey(key: string) {
-    this.scopeKey = key;
-    return this;
-  }
-
   private getProtocol() {
-    if (this.protocol === "auto") {
+    const protocol = this.dependencies.protocol ?? "auto";
+
+    if (protocol === "auto") {
       // @ts-ignore depending on environment
       const location = globalThis.location;
 
@@ -41,24 +44,46 @@ export class MasjidiAlAdhanAPIPrayerTimesStrategy extends MasjidiPrayerTimesStra
       return protocol;
     }
 
-    return this.protocol;
+    return protocol;
   }
   async getCalendar() {
     // Fixed leap year for 366 days
     const aladhanAPIUrl = new URL(
       `${this.getProtocol()}://api.aladhan.com/v1/calendar/2024`
     );
-    for (const key in this.apiOptions) {
-      aladhanAPIUrl.searchParams.set(key, this.apiOptions[key]);
+
+    const apiOptionsKeys = Object.keys(
+      this.dependencies.apiOptions
+    ) as (keyof AlAdhanAPIOptions)[];
+
+    for (const key of apiOptionsKeys) {
+      let value = this.dependencies.apiOptions[key];
+      if (value === undefined) continue;
+
+      if (key === "tune") {
+        value = (value as AlAdhanAPIOptions["tune"])!;
+
+        value = [
+          value.Imsak ?? 0,
+          value.Fajr ?? 0,
+          value.Sunrise ?? 0,
+          value.Dhuhr ?? 0,
+          value.Asr ?? 0,
+          value.Maghrib ?? 0,
+          value.Sunset ?? 0,
+          value.Isha ?? 0,
+          value.Midnight ?? 0,
+        ].join(",");
+      }
+
+      aladhanAPIUrl.searchParams.set(key, value + "");
     }
 
-    const mainKey = "masjidi-al-adhan-api-prayer-times-strategy-data";
-
-    return await this.dependencies.savedFetch
-      .fetch(this.scopeKey ? `${mainKey}/${this.scopeKey}` : mainKey, {
-        input: aladhanAPIUrl,
-        init: { method: "GET" },
-        state: { api: this.apiOptions },
+    return await this.dependencies.fetcher
+      .fetch({
+        key: this.dependencies.savedKey! /* TODO: type assert */,
+        state: { api: this.dependencies.apiOptions },
+        url: aladhanAPIUrl.toString(),
       })
       .then((e) => {
         return Object.values(
