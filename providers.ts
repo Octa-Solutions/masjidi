@@ -3,11 +3,9 @@ import { MasjidiTableAPIPrayerTimesStrategy } from "@/core/MasjidiPrayerTimesStr
 import { CachedFetcher } from "@/core/utils/fetch/CachedFetcher";
 import { DomFetcher } from "@/core/utils/fetch/DomFetcher";
 import { SavedFetcher } from "@/core/utils/fetch/SavedFetcher";
-import {
-  NativeStorageAPI,
-  NoopStorageAPI,
-  StorageAPI,
-} from "@/core/utils/StorageAPI";
+import { NativeStorageAPI } from "@/core/utils/storage/NativeStorageAPI";
+import { NoopStorageAPI } from "@/core/utils/storage/NoopStorageAPI";
+import { StorageAPI } from "@/core/utils/storage/StorageAPI";
 
 // ! ||--------------------------------------------------------------------------------||
 // ! ||                                 Fetch Providers                                ||
