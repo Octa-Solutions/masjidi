@@ -3,9 +3,12 @@ import { MasjidiTableAPIPrayerTimesStrategy } from "@/core/MasjidiPrayerTimesStr
 import { CachedFetcher } from "@/core/utils/fetch/CachedFetcher";
 import { DomFetcher } from "@/core/utils/fetch/DomFetcher";
 import { SavedFetcher } from "@/core/utils/fetch/SavedFetcher";
+import {
+  IndexedDBConfig,
+  IndexedDBStorageAPI,
+} from "@/core/utils/storage/IndexedDBStorageAPI";
 import { NativeStorageAPI } from "@/core/utils/storage/NativeStorageAPI";
 import { NoopStorageAPI } from "@/core/utils/storage/NoopStorageAPI";
-import { StorageAPI } from "@/core/utils/storage/StorageAPI";
 
 // ! ||--------------------------------------------------------------------------------||
 // ! ||                                 Fetch Providers                                ||
@@ -27,16 +30,19 @@ export const provideSavedFetcher = (
 // ! ||                                Storage Providers                               ||
 // ! ||--------------------------------------------------------------------------------||
 
-export const provideNativeStorage = (storage: Storage): StorageAPI =>
+export const provideNativeStorage = (storage: Storage) =>
   new NativeStorageAPI(storage);
 
-export const provideLocalStorageStorage = (): StorageAPI =>
+export const provideLocalStorageStorage = () =>
   provideNativeStorage(localStorage);
 
-export const provideSessionStorageStorage = (): StorageAPI =>
+export const provideSessionStorageStorage = () =>
   provideNativeStorage(sessionStorage);
 
-export const provideNoopStorage = (): StorageAPI => new NoopStorageAPI();
+export const provideNoopStorage = () => new NoopStorageAPI();
+
+export const provideIndexedDBStorage = (config: IndexedDBConfig) =>
+  new IndexedDBStorageAPI(config);
 
 // ! ||--------------------------------------------------------------------------------||
 // ! ||                        Prayer Times Strategies Providers                       ||
