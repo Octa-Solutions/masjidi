@@ -43,4 +43,8 @@ export class EventListener<TEvents extends Record<any, any[]>> {
       }
     });
   }
+
+  removeAllListeners() {
+    this.events = {};
+  }
 }

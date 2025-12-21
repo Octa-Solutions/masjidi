@@ -43,8 +43,8 @@ export class MasjidiController extends EventListener<{
   private startTime: number | null = null;
   private timingsPromise: Promise<MasjidiPrayerTimings> | null = null;
   private timings: MasjidiPrayerTimings | null = null;
-  private tickInterval: number | null = null;
-  private hadithInterval: number | null = null;
+  private tickInterval: any | null = null;
+  private hadithInterval: any | null = null;
   private previousState: MasjidiContextualStatus | null = null;
   private previousAdhanPrayer: Prayer | null = null;
   private previousIqamaPrayer: Prayer | null | undefined = undefined;
@@ -184,5 +184,19 @@ export class MasjidiController extends EventListener<{
 
     this.tick(true);
     this.hadith();
+  }
+
+  destroy() {
+    if (this.tickInterval !== null) {
+      clearInterval(this.tickInterval);
+      this.tickInterval = null;
+    }
+
+    if (this.hadithInterval !== null) {
+      clearInterval(this.hadithInterval);
+      this.hadithInterval = null;
+    }
+
+    this.removeAllListeners();
   }
 }
