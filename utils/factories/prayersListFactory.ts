@@ -18,9 +18,6 @@ export const prayersListFactory = (
     Prayer.factory({
       key: key,
       name: value.name ?? "",
-      adhanAudioPath: value.adhanAudioPath ?? null,
-      adhanAudioVolume: value.adhanAudioVolume ?? 1,
-      iqamaAudioPath: value.iqamaAudioPath ?? null,
       duration: value.duration ?? 0,
       iqamaWaitDuration: value.iqamaWaitDuration ?? 0,
       azkarDuration: value.azkarDuration ?? 0,

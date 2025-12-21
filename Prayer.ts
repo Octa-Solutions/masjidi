@@ -1,6 +1,5 @@
 import { MasjidiDate } from "@/core/MasjidiDate";
 import { wrapNumber } from "@/core/utils/math";
-import { GlobalAudioPool } from "@/utils/GlobalAudioPool";
 
 export type PrayerUpcomingSettings = {
   activeOnlyWhenInOffset?: boolean;
@@ -24,9 +23,6 @@ export type IPrayer = Prettify<
   {
     time: number;
     readonly key: string;
-    readonly adhanAudioPath: string | null;
-    readonly adhanAudioVolume: number;
-    readonly iqamaAudioPath: string | null;
     readonly azkarDuration: number;
     readonly timeOffset: number;
     readonly dateOverrides: PrayerDateOverride[];
@@ -35,17 +31,9 @@ export type IPrayer = Prettify<
 export type IUninitializedPrayer = Omit<IPrayer, "time">;
 
 export class Prayer implements IPrayer {
-  readonly adhanAudio: HTMLAudioElement | null;
-  readonly adhanAudioPromise: Promise<void> | null;
-  readonly iqamaAudio: HTMLAudioElement | null;
-  readonly iqamaAudioPromise: Promise<void> | null;
-
   constructor(
     readonly key: string,
     readonly name: string,
-    readonly adhanAudioPath: string | null,
-    readonly adhanAudioVolume: number,
-    readonly iqamaAudioPath: string | null,
     readonly duration: number,
     readonly iqamaWaitDuration: number,
     readonly azkarDuration: number,
@@ -53,14 +41,7 @@ export class Prayer implements IPrayer {
     readonly upcoming: null | PrayerUpcomingSettings = null,
     readonly dateOverrides: PrayerDateOverride[],
     public time: number
-  ) {
-    [this.adhanAudio, this.adhanAudioPromise] = this.adhanAudioPath
-      ? GlobalAudioPool.get(this.adhanAudioPath)
-      : [null, null];
-    [this.iqamaAudio, this.iqamaAudioPromise] = this.iqamaAudioPath
-      ? GlobalAudioPool.get(this.iqamaAudioPath)
-      : [null, null];
-  }
+  ) {}
 
   getOffsettedTime() {
     return wrapNumber(this.time + this.timeOffset, 0, 24 * 60);
@@ -168,9 +149,6 @@ export class Prayer implements IPrayer {
     return new Prayer(
       prayer.key,
       prayer.name,
-      prayer.adhanAudioPath,
-      prayer.adhanAudioVolume,
-      prayer.iqamaAudioPath,
       prayer.duration,
       prayer.iqamaWaitDuration,
       prayer.azkarDuration,

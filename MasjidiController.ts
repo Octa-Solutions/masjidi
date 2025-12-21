@@ -27,7 +27,7 @@ export class MasjidiController extends EventListener<{
   hadith: [hadith: MasjidiHadith];
 
   // Prayer-Related Events
-  adhan: [prayer: Prayer, offset: number, volume: number];
+  adhan: [prayer: Prayer, offset: () => number];
   iqama: [prayer: Prayer];
 }> {
   constructor(
@@ -126,29 +126,11 @@ export class MasjidiController extends EventListener<{
     }
 
     if (adhanPrayerChanged && adhanPrayer) {
-      const offset =
+      const offset = () =>
         this.masjidi.getNow().time.secondOfDay -
         adhanPrayer.getOffsettedTime() * 60;
 
-      if (adhanPrayer.adhanAudio) {
-        adhanPrayer.adhanAudioPromise!.then(() => {
-          if (offset >= 0 && offset < adhanPrayer.adhanAudio!.duration) {
-            this.dispatch(
-              "adhan",
-              adhanPrayer,
-              offset,
-              adhanPrayer.adhanAudioVolume
-            );
-          }
-        });
-      } else {
-        this.dispatch(
-          "adhan",
-          adhanPrayer,
-          offset,
-          adhanPrayer.adhanAudioVolume
-        );
-      }
+      this.dispatch("adhan", adhanPrayer, offset);
     }
     if (iqamaPrayerChanged && iqamaPrayer) {
       this.dispatch("iqama", iqamaPrayer);

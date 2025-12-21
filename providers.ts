@@ -1,5 +1,6 @@
 import { MasjidiAlAdhanAPIPrayerTimesStrategy } from "@/core/MasjidiPrayerTimesStrategies/MasjidiAlAdhanAPIPrayerTimesStrategy";
 import { MasjidiTableAPIPrayerTimesStrategy } from "@/core/MasjidiPrayerTimesStrategies/MasjidiTableAPIPrayerTimesStrategy";
+import { WebGlobalAudioPool } from "@/core/utils/audio/WebGlobalAudioPool";
 import { CachedFetcher } from "@/core/utils/fetch/CachedFetcher";
 import { DomFetcher } from "@/core/utils/fetch/DomFetcher";
 import { SavedFetcher } from "@/core/utils/fetch/SavedFetcher";
@@ -55,3 +56,9 @@ export const provideMasjidiAlAdhanAPIPrayerTimesStrategy = (
 export const provideMasjidiTableAPIPrayerTimesStrategy = (
   ...params: ConstructorParameters<typeof MasjidiTableAPIPrayerTimesStrategy>
 ) => new MasjidiTableAPIPrayerTimesStrategy(...params);
+
+// ! ||--------------------------------------------------------------------------------||
+// ! ||                                Audio Providers                                 ||
+// ! ||--------------------------------------------------------------------------------||
+
+export const provideWebGlobalAudioPool = () => new WebGlobalAudioPool();
