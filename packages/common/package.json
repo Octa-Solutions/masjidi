@@ -5,6 +5,7 @@
     "build": "tsup",
     "test": "vitest run --coverage"
   },
+  "files": ["dist"],
   "exports": {
     ".": {
       "types": {
