@@ -1,5 +1,5 @@
 export function PromiseDebounceBase<
-  T extends (this: any, ...args: any[]) => Promise<any>
+  T extends (this: any, ...args: any[]) => Promise<any>,
 >(fn: T): T {
   let leadingPromise: Promise<any> | undefined = undefined;
 

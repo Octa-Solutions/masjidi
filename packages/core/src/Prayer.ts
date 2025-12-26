@@ -41,7 +41,7 @@ export class Prayer implements IPrayer {
     readonly timeOffset: number,
     readonly upcoming: null | PrayerUpcomingSettings = null,
     readonly dateOverrides: PrayerDateOverride[],
-    public time: number
+    public time: number,
   ) {}
 
   getOffsettedTime() {
@@ -112,11 +112,11 @@ export class Prayer implements IPrayer {
 
   getOverriddenSettings(date: MasjidiDate) {
     const currentDateOverride = this.dateOverrides.find((e) =>
-      MasjidiDate.matches(date, e.date)
+      MasjidiDate.matches(date, e.date),
     );
 
     const upcomingActive = (
-      upcoming: PrayerUpcomingSettings | null | undefined
+      upcoming: PrayerUpcomingSettings | null | undefined,
     ) =>
       upcoming
         ? upcoming.activeOnlyWhenInOffset && upcoming.offset
@@ -156,7 +156,7 @@ export class Prayer implements IPrayer {
       prayer.timeOffset,
       prayer.upcoming,
       prayer.dateOverrides,
-      prayer.time
+      prayer.time,
     );
   }
 }

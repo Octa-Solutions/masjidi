@@ -5,7 +5,7 @@ export class EventListener<TEvents extends Record<any, any[]>> {
 
   on<T extends keyof TEvents>(
     type: T,
-    listener: (...args: TEvents[T]) => void
+    listener: (...args: TEvents[T]) => void,
   ): () => void {
     if (!this.events[type]) {
       this.events[type] = new Set();
@@ -16,14 +16,14 @@ export class EventListener<TEvents extends Record<any, any[]>> {
 
   off<T extends keyof TEvents>(
     type: T,
-    listener: (...args: TEvents[T]) => void
+    listener: (...args: TEvents[T]) => void,
   ) {
     this.events[type]?.delete(listener);
   }
 
   once<T extends keyof TEvents>(
     type: T,
-    listener: (...args: TEvents[T]) => void
+    listener: (...args: TEvents[T]) => void,
   ): () => void {
     const wrapper = (...args: TEvents[T]) => {
       this.off(type, wrapper);

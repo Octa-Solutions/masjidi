@@ -66,7 +66,7 @@ export class NotificationController {
 
   activeNotifications(now: Date) {
     return this.notifications.filter((notification) =>
-      notification.isActive(now)
+      notification.isActive(now),
     );
   }
 }

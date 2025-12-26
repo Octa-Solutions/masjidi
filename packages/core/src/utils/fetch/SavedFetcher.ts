@@ -21,7 +21,7 @@ export class SavedFetcher implements ISavedStringFetcher {
 
       readonly formatDataKey?: (key: string) => string;
       readonly formatStateKey?: (key: string) => string;
-    }
+    },
   ) {}
 
   async fetch(options: ISavedStringFetcherOptions): Promise<string> {

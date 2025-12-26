@@ -16,7 +16,7 @@ export class WebGlobalAudioPool extends GlobalAudioPool<HTMLAudioElement> {
 
   protected playInstant(
     src: string,
-    { offset, volume }: { offset: number; volume: number }
+    { offset, volume }: { offset: number; volume: number },
   ) {
     const [audio, _] = this.get(src);
 

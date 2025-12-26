@@ -6,7 +6,7 @@ export abstract class GlobalAudioPool<T = any> {
     options: {
       offset: number;
       volume: number;
-    }
+    },
   ): void;
 
   async play(
@@ -17,7 +17,7 @@ export abstract class GlobalAudioPool<T = any> {
     }: {
       offset?: number | (() => number);
       volume?: number | (() => number);
-    } = {}
+    } = {},
   ) {
     const [_, promise] = this.get(src);
 

@@ -26,7 +26,7 @@ export class IndexedDBStorageAPI extends StorageAPI {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(
         this.config.dbName,
-        this.config.version || 1
+        this.config.version || 1,
       );
 
       request.onupgradeneeded = (event) => {
@@ -48,7 +48,7 @@ export class IndexedDBStorageAPI extends StorageAPI {
   }
 
   async getAll<T extends Record<string, StorageAPIItem>>(
-    keys: (keyof T)[]
+    keys: (keyof T)[],
   ): Promise<{ [P in keyof T]: T[P] | undefined }> {
     await this.ensureInit();
     return new Promise((resolve, reject) => {
@@ -56,7 +56,7 @@ export class IndexedDBStorageAPI extends StorageAPI {
 
       const transaction = this.db.transaction(
         [this.config.storeName],
-        "readonly"
+        "readonly",
       );
       const store = transaction.objectStore(this.config.storeName);
       const results: Partial<T> = {};
@@ -89,7 +89,7 @@ export class IndexedDBStorageAPI extends StorageAPI {
   }
 
   async setAll<T extends Record<string, StorageAPIItem>>(
-    records: T
+    records: T,
   ): Promise<void> {
     await this.ensureInit();
     return new Promise((resolve, reject) => {
@@ -97,7 +97,7 @@ export class IndexedDBStorageAPI extends StorageAPI {
 
       const transaction = this.db.transaction(
         [this.config.storeName],
-        "readwrite"
+        "readwrite",
       );
       const store = transaction.objectStore(this.config.storeName);
 
@@ -122,7 +122,7 @@ export class IndexedDBStorageAPI extends StorageAPI {
 
       const transaction = this.db.transaction(
         [this.config.storeName],
-        "readwrite"
+        "readwrite",
       );
       const store = transaction.objectStore(this.config.storeName);
 

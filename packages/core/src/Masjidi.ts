@@ -39,7 +39,7 @@ export class Masjidi implements IMasjidi {
     readonly initialNow: Date,
     readonly hijriDayAdjustment: number,
     readonly ahadith: MasjidiHadith[],
-    readonly prayers: Prayer[]
+    readonly prayers: Prayer[],
   ) {
     console.assert(prayers.length > 0, "At least one prayer is required");
 
@@ -57,7 +57,7 @@ export class Masjidi implements IMasjidi {
   getUpcomingPrayer() {
     return (
       this.prayers.find((e) =>
-        e.isAfter(this.now, e.getOverriddenSettings(this.now).upcoming.offset)
+        e.isAfter(this.now, e.getOverriddenSettings(this.now).upcoming.offset),
       ) ?? this.prayers[0]
     );
   }
@@ -84,7 +84,7 @@ export class Masjidi implements IMasjidi {
   getCurrentPrayer() {
     return (
       this.prayers.find(
-        (e) => e.isInIqamaWait(this.now) || e.isInPrayer(this.now)
+        (e) => e.isInIqamaWait(this.now) || e.isInPrayer(this.now),
       ) ?? null
     );
   }
@@ -98,7 +98,7 @@ export class Masjidi implements IMasjidi {
         secondsLeft: wrapNumber(
           currentIqamaWaitPrayer.getTimeLeftForIqama(this.now),
           0,
-          DateUtils.DAY_IN_SECONDS
+          DateUtils.DAY_IN_SECONDS,
         ),
       };
     }
@@ -111,7 +111,7 @@ export class Masjidi implements IMasjidi {
         secondsLeft: wrapNumber(
           currentInPrayerPrayer.getTimeLeftForPrayer(this.now),
           0,
-          DateUtils.DAY_IN_SECONDS
+          DateUtils.DAY_IN_SECONDS,
         ),
       };
     }
@@ -125,7 +125,7 @@ export class Masjidi implements IMasjidi {
         upcomingPrayer.getTimeLeftForIqamaWait(this.now) +
           upcomingPrayer.getOverriddenSettings(this.now).upcoming.offset * 60,
         0,
-        DateUtils.DAY_IN_SECONDS
+        DateUtils.DAY_IN_SECONDS,
       ),
     };
   }
@@ -183,7 +183,7 @@ export class Masjidi implements IMasjidi {
       masjidi.initialNow,
       masjidi.hijriDayAdjustment,
       masjidi.ahadith,
-      masjidi.prayers
+      masjidi.prayers,
     );
   }
 }

@@ -6,7 +6,7 @@ export class NativeStorageAPI extends StorageAPI {
   }
 
   async getAll<T extends Record<string, StorageAPIItem>>(
-    keys: (keyof T)[]
+    keys: (keyof T)[],
   ): Promise<{
     [P in keyof T]: T[P] | undefined;
   }> {
@@ -16,12 +16,12 @@ export class NativeStorageAPI extends StorageAPI {
         const raw = this.nativeStorage.getItem(key as string);
         const value = raw === null ? undefined : JSON.parse(raw);
         return [key, value];
-      })
+      }),
     );
   }
 
   async setAll<T extends Record<string, StorageAPIItem>>(
-    records: T
+    records: T,
   ): Promise<void> {
     for (const key in records) {
       this.nativeStorage.setItem(key, JSON.stringify(records[key]));

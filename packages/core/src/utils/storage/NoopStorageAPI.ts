@@ -2,7 +2,7 @@ import { StorageAPI, StorageAPIItem } from "@/utils/storage/StorageAPI";
 
 export class NoopStorageAPI extends StorageAPI {
   async getAll<T extends Record<string, StorageAPIItem>>(
-    keys: (keyof T)[]
+    keys: (keyof T)[],
   ): Promise<{
     [P in keyof T]: T[P] | undefined;
   }> {
@@ -11,7 +11,7 @@ export class NoopStorageAPI extends StorageAPI {
   }
 
   async setAll<T extends Record<string, StorageAPIItem>>(
-    records: T
+    records: T,
   ): Promise<void> {}
 
   async removeAll(keys: string[]): Promise<void> {}

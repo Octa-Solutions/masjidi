@@ -69,7 +69,7 @@ export type MasjidiMultiDateCondition =
 export namespace MasjidiDate {
   export function factory(
     gregorian: Date,
-    hijriDayAdjustment: number = 0
+    hijriDayAdjustment: number = 0,
   ): MasjidiDate {
     let hijri = Hijri.fromGregorian(gregorian);
 
@@ -114,7 +114,7 @@ export namespace MasjidiDate {
 
   export function multiConditionMet(
     condition: MasjidiMultiDateCondition,
-    date: MasjidiDate
+    date: MasjidiDate,
   ) {
     const start = "when" in condition ? condition.when : condition.start;
     const end = "when" in condition ? condition.when : condition.end;

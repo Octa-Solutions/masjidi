@@ -30,7 +30,7 @@ export class Hijri {
 
   static adjust(
     [hijriDay, hijriMonth, hijriYear]: [number, number, number],
-    daysOffset: number
+    daysOffset: number,
   ): [number, number, number] {
     const DAYS_IN_MONTH = 30;
     const MONTHS_IN_YEAR = 12;

@@ -12,7 +12,7 @@ export const PRAYERS = [
 export type PrayerKey = (typeof PRAYERS)[number];
 
 export const prayersListFactory = (
-  config: Partial<Record<PrayerKey, Partial<Omit<IPrayer, "key">>>>
+  config: Partial<Record<PrayerKey, Partial<Omit<IPrayer, "key">>>>,
 ) => {
   return Object.entries(config).map(([key, value]) =>
     Prayer.factory({
@@ -25,6 +25,6 @@ export const prayersListFactory = (
       dateOverrides: value.dateOverrides ?? [],
       upcoming: value.upcoming ?? null,
       time: NaN,
-    })
+    }),
   );
 };

@@ -20,7 +20,7 @@ export class MasjidiAlAdhanAPIPrayerTimesStrategy extends MasjidiPrayerTimesStra
       readonly protocol?: AutoProtocol;
 
       readonly savedKey?: string;
-    }
+    },
   ) {
     super();
   }
@@ -36,7 +36,7 @@ export class MasjidiAlAdhanAPIPrayerTimesStrategy extends MasjidiPrayerTimesStra
 
       const protocol = location.protocol.substring(
         0,
-        location.protocol.length - 1
+        location.protocol.length - 1,
       );
 
       if (protocol !== "http" && protocol !== "https") return "https";
@@ -49,11 +49,11 @@ export class MasjidiAlAdhanAPIPrayerTimesStrategy extends MasjidiPrayerTimesStra
   async getCalendar() {
     // Fixed leap year for 366 days
     const aladhanAPIUrl = new URL(
-      `${this.getProtocol()}://api.aladhan.com/v1/calendar/2024`
+      `${this.getProtocol()}://api.aladhan.com/v1/calendar/2024`,
     );
 
     const apiOptionsKeys = Object.keys(
-      this.dependencies.apiOptions
+      this.dependencies.apiOptions,
     ) as (keyof AlAdhanAPIOptions)[];
 
     for (const key of apiOptionsKeys) {
@@ -87,7 +87,7 @@ export class MasjidiAlAdhanAPIPrayerTimesStrategy extends MasjidiPrayerTimesStra
       })
       .then((e) => {
         return Object.values(
-          JSON.parse(e as string).data as AlAdhanCalendarAPIResponse
+          JSON.parse(e as string).data as AlAdhanCalendarAPIResponse,
         )
           .reduce((acc, currentArr) => acc.concat(currentArr), [])
           .map((day) =>
@@ -98,8 +98,8 @@ export class MasjidiAlAdhanAPIPrayerTimesStrategy extends MasjidiPrayerTimesStra
                   .split(" ")[0]
                   .split(":")
                   .map((x: string) => +x) as [number, number],
-              ])
-            )
+              ]),
+            ),
           );
       });
   }

@@ -14,7 +14,7 @@ export class MasjidiTableAPIPrayerTimesStrategy extends MasjidiPrayerTimesStrate
       readonly fetchOptions: IStringFetcherOptions;
 
       readonly savedKey?: string;
-    }
+    },
   ) {
     super();
   }
@@ -28,7 +28,7 @@ export class MasjidiTableAPIPrayerTimesStrategy extends MasjidiPrayerTimesStrate
           state: this.dependencies.fetchOptions.body
             ? Array.from(this.dependencies.fetchOptions.body.entries())
             : null,
-        })
+        }),
       )
       .then((e) => JSON.parse(e))
       .then((e) =>
@@ -37,9 +37,9 @@ export class MasjidiTableAPIPrayerTimesStrategy extends MasjidiPrayerTimesStrate
             Object.entries(e).map(([k, v]: [string, any]) => [
               k,
               v.split(":").map((x: string) => +x),
-            ])
-          )
-        )
+            ]),
+          ),
+        ),
       );
   }
 }

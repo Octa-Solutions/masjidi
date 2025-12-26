@@ -10,13 +10,13 @@ export type StorageAPIItem =
 
 export abstract class StorageAPI {
   abstract getAll<T extends Record<string, StorageAPIItem>>(
-    keys: (keyof T)[]
+    keys: (keyof T)[],
   ): Promise<{
     [P in keyof T]: T[P] | undefined;
   }>;
 
   abstract setAll<T extends Record<string, StorageAPIItem>>(
-    records: T
+    records: T,
   ): Promise<void>;
 
   abstract removeAll(keys: string[]): Promise<void>;

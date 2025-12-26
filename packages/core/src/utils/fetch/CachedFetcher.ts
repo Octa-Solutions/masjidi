@@ -12,7 +12,7 @@ export class CachedFetcher implements IStringFetcher {
     readonly dependencies: {
       readonly fetcher: IStringFetcher;
       readonly globalFiles?: Record<string, string>;
-    }
+    },
   ) {}
 
   async fetch(options: IStringFetcherOptions): Promise<string> {

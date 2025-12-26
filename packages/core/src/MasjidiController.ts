@@ -1,8 +1,4 @@
-import {
-  Masjidi,
-  MasjidiContextualStatus,
-  MasjidiHadith,
-} from "@/Masjidi";
+import { Masjidi, MasjidiContextualStatus, MasjidiHadith } from "@/Masjidi";
 import {
   MasjidiPrayerTimesStrategy,
   MasjidiPrayerTimings,
@@ -35,7 +31,7 @@ export class MasjidiController extends EventListener<{
     private options: {
       timesStrategy: MasjidiPrayerTimesStrategy;
       hadithInterval?: number;
-    }
+    },
   ) {
     super();
   }
@@ -63,7 +59,7 @@ export class MasjidiController extends EventListener<{
     }
 
     const now = new Date(
-      this.masjidi.initialNow.getTime() - this.startTime + Date.now()
+      this.masjidi.initialNow.getTime() - this.startTime + Date.now(),
     );
     const daylightSavingTimeOffset = this.options.timesStrategy.isDayLightSaved
       ? 0
@@ -178,7 +174,7 @@ export class MasjidiController extends EventListener<{
     if (this.options.hadithInterval !== undefined) {
       this.hadithInterval = setInterval(
         () => this.hadith(),
-        this.options.hadithInterval
+        this.options.hadithInterval,
       );
     }
 
