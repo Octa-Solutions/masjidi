@@ -1,5 +1,6 @@
 {
   "name": "@masjidi/core",
+  "version": "1.0.1",
   "scripts": {
     "build": "tsup",
     "test": "vitest run --coverage"
