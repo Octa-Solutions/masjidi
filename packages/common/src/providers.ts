@@ -1,13 +1,13 @@
-import { WebGlobalAudioPool } from "./utils/audio/WebGlobalAudioPool";
-import { CachedFetcher } from "./utils/fetch/CachedFetcher";
-import { DomFetcher } from "./utils/fetch/DomFetcher";
-import { SavedFetcher } from "./utils/fetch/SavedFetcher";
+import { WebGlobalAudioPool } from "@/utils/audio/WebGlobalAudioPool";
+import { CachedFetcher } from "@/utils/fetch/CachedFetcher";
+import { DomFetcher } from "@/utils/fetch/DomFetcher";
+import { SavedFetcher } from "@/utils/fetch/SavedFetcher";
 import {
   IndexedDBConfig,
   IndexedDBStorageAPI,
-} from "./utils/storage/IndexedDBStorageAPI";
-import { NativeStorageAPI } from "./utils/storage/NativeStorageAPI";
-import { NoopStorageAPI } from "./utils/storage/NoopStorageAPI";
+} from "@/utils/storage/IndexedDBStorageAPI";
+import { NativeStorageAPI } from "@/utils/storage/NativeStorageAPI";
+import { NoopStorageAPI } from "@/utils/storage/NoopStorageAPI";
 
 // ! ||--------------------------------------------------------------------------------||
 // ! ||                                 Fetch Providers                                ||

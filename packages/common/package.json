@@ -13,6 +13,14 @@
       },
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./providers": {
+      "types": {
+        "import": "./dist/providers.d.ts",
+        "require": "./dist/providers.d.cts"
+      },
+      "import": "./dist/providers.js",
+      "require": "./dist/providers.cjs"
     }
   },
   "dependencies": {
