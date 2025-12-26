@@ -1,7 +1,7 @@
-import { AlAdhanAPIOptions } from "@/core/MasjidiPrayerTimesStrategies/AlAdhanAPIOptions";
-import { MasjidiPrayerTimesStrategy } from "@/core/MasjidiPrayerTimesStrategy";
-import { IStringFetcher } from "@/core/utils/fetch/IStringFetcher";
-import { ISavedStringFetcher } from "@/core/utils/fetch/SavedFetcher";
+import { AlAdhanAPIOptions } from "@/MasjidiPrayerTimesStrategies/AlAdhanAPIOptions";
+import { MasjidiPrayerTimesStrategy } from "@/MasjidiPrayerTimesStrategy";
+import { IStringFetcher } from "@/utils/fetch/IStringFetcher";
+import { ISavedStringFetcher } from "@/utils/fetch/SavedFetcher";
 
 type Protocol = "http" | "https";
 type AutoProtocol = Protocol | "auto";

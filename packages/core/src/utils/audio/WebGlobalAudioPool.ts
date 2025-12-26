@@ -1,4 +1,4 @@
-import { GlobalAudioPool } from "@/core/utils/audio/GlobalAudioPool";
+import { GlobalAudioPool } from "@/utils/audio/GlobalAudioPool";
 
 export class WebGlobalAudioPool extends GlobalAudioPool<HTMLAudioElement> {
   private audios: Record<string, HTMLAudioElement> = {};

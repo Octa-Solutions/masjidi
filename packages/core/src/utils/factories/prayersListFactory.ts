@@ -1,4 +1,4 @@
-import { IPrayer, Prayer } from "@/core/Prayer";
+import { IPrayer, Prayer } from "@/Prayer";
 
 export const PRAYERS = [
   "Fajr",

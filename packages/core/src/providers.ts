@@ -1,15 +1,15 @@
-import { MasjidiAlAdhanAPIPrayerTimesStrategy } from "@/core/MasjidiPrayerTimesStrategies/MasjidiAlAdhanAPIPrayerTimesStrategy";
-import { MasjidiTableAPIPrayerTimesStrategy } from "@/core/MasjidiPrayerTimesStrategies/MasjidiTableAPIPrayerTimesStrategy";
-import { WebGlobalAudioPool } from "@/core/utils/audio/WebGlobalAudioPool";
-import { CachedFetcher } from "@/core/utils/fetch/CachedFetcher";
-import { DomFetcher } from "@/core/utils/fetch/DomFetcher";
-import { SavedFetcher } from "@/core/utils/fetch/SavedFetcher";
+import { MasjidiAlAdhanAPIPrayerTimesStrategy } from "@/MasjidiPrayerTimesStrategies/MasjidiAlAdhanAPIPrayerTimesStrategy";
+import { MasjidiTableAPIPrayerTimesStrategy } from "@/MasjidiPrayerTimesStrategies/MasjidiTableAPIPrayerTimesStrategy";
+import { WebGlobalAudioPool } from "@/utils/audio/WebGlobalAudioPool";
+import { CachedFetcher } from "@/utils/fetch/CachedFetcher";
+import { DomFetcher } from "@/utils/fetch/DomFetcher";
+import { SavedFetcher } from "@/utils/fetch/SavedFetcher";
 import {
   IndexedDBConfig,
   IndexedDBStorageAPI,
-} from "@/core/utils/storage/IndexedDBStorageAPI";
-import { NativeStorageAPI } from "@/core/utils/storage/NativeStorageAPI";
-import { NoopStorageAPI } from "@/core/utils/storage/NoopStorageAPI";
+} from "@/utils/storage/IndexedDBStorageAPI";
+import { NativeStorageAPI } from "@/utils/storage/NativeStorageAPI";
+import { NoopStorageAPI } from "@/utils/storage/NoopStorageAPI";
 
 // ! ||--------------------------------------------------------------------------------||
 // ! ||                                 Fetch Providers                                ||

@@ -1,8 +1,8 @@
-import { PromiseDebounceBase } from "@/core/utils/decorators";
+import { PromiseDebounceBase } from "@/utils/decorators";
 import {
   IStringFetcher,
   IStringFetcherOptions,
-} from "@/core/utils/fetch/IStringFetcher";
+} from "@/utils/fetch/IStringFetcher";
 
 export class CachedFetcher implements IStringFetcher {
   private readonly globalCache = new Map<string, string>();

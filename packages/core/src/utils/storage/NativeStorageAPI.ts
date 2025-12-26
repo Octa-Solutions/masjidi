@@ -1,4 +1,4 @@
-import { StorageAPI, StorageAPIItem } from "@/core/utils/storage/StorageAPI";
+import { StorageAPI, StorageAPIItem } from "@/utils/storage/StorageAPI";
 
 export class NativeStorageAPI extends StorageAPI {
   constructor(readonly nativeStorage: Storage) {

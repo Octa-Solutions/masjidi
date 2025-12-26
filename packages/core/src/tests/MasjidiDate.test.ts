@@ -1,4 +1,4 @@
-import { MasjidiDate, MasjidiMultiDateCondition } from "@/core/MasjidiDate";
+import { MasjidiDate, MasjidiMultiDateCondition } from "@/MasjidiDate";
 import { describe, expect, test } from "vitest";
 
 describe("MasjidiDate.multiConditionMet", () => {

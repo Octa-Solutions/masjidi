@@ -1,8 +1,8 @@
 import {
   IStringFetcher,
   IStringFetcherOptions,
-} from "@/core/utils/fetch/IStringFetcher";
-import { StorageAPI } from "@/core/utils/storage/StorageAPI";
+} from "@/utils/fetch/IStringFetcher";
+import { StorageAPI } from "@/utils/storage/StorageAPI";
 
 export interface ISavedStringFetcherOptions extends IStringFetcherOptions {
   key: string;

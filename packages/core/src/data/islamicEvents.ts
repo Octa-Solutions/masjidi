@@ -1,4 +1,4 @@
-import { MasjidiMultiDateCondition } from "@/core/MasjidiDate";
+import { MasjidiMultiDateCondition } from "@/MasjidiDate";
 
 export type IslamicEvent = keyof typeof islamicEvents;
 export const islamicEvents = {

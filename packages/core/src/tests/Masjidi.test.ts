@@ -1,6 +1,6 @@
-import { Masjidi, MasjidiStatus } from "@/core/Masjidi";
-import { MasjidiDate } from "@/core/MasjidiDate";
-import { Prayer } from "@/core/Prayer";
+import { Masjidi, MasjidiStatus } from "@/Masjidi";
+import { MasjidiDate } from "@/MasjidiDate";
+import { Prayer } from "@/Prayer";
 import { describe, expect, test } from "vitest";
 
 const createMasjidiDate = (time: string, dayOffset = 0) => {

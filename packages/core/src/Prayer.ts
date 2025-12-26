@@ -1,5 +1,6 @@
-import { MasjidiDate } from "@/core/MasjidiDate";
-import { wrapNumber } from "@/core/utils/math";
+import { MasjidiDate } from "@/MasjidiDate";
+import { wrapNumber } from "@/utils/math";
+import { DeepPartial, Prettify } from "@/utils/types";
 
 export type PrayerUpcomingSettings = {
   activeOnlyWhenInOffset?: boolean;

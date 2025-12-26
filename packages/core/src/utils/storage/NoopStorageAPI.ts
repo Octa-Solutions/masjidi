@@ -1,4 +1,4 @@
-import { StorageAPI, StorageAPIItem } from "@/core/utils/storage/StorageAPI";
+import { StorageAPI, StorageAPIItem } from "@/utils/storage/StorageAPI";
 
 export class NoopStorageAPI extends StorageAPI {
   async getAll<T extends Record<string, StorageAPIItem>>(

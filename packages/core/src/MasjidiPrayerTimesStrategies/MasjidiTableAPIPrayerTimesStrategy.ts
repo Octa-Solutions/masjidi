@@ -1,9 +1,9 @@
-import { MasjidiPrayerTimesStrategy } from "@/core/MasjidiPrayerTimesStrategy";
+import { MasjidiPrayerTimesStrategy } from "@/MasjidiPrayerTimesStrategy";
 import {
   IStringFetcher,
   IStringFetcherOptions,
-} from "@/core/utils/fetch/IStringFetcher";
-import { ISavedStringFetcher } from "@/core/utils/fetch/SavedFetcher";
+} from "@/utils/fetch/IStringFetcher";
+import { ISavedStringFetcher } from "@/utils/fetch/SavedFetcher";
 
 export class MasjidiTableAPIPrayerTimesStrategy extends MasjidiPrayerTimesStrategy {
   readonly isDayLightSaved = false;

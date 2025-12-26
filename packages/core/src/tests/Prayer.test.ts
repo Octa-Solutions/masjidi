@@ -1,5 +1,5 @@
-import { MasjidiDate } from "@/core/MasjidiDate";
-import { IPrayer, Prayer } from "@/core/Prayer";
+import { MasjidiDate } from "@/MasjidiDate";
+import { IPrayer, Prayer } from "@/Prayer";
 import { describe, expect, it } from "vitest";
 
 const mPrayer = (
