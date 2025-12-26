@@ -4,9 +4,7 @@ import {
   MasjidiPrayerTimings,
 } from "@/MasjidiPrayerTimesStrategy";
 import { Prayer } from "@/Prayer";
-import { DateUtils } from "@/utils/date/DateUtils";
-import { EventListener } from "@/utils/EventListener";
-import { wrapNumber } from "@/utils/math";
+import { DateUtils, EventListener, wrapNumber } from "@masjidi/common";
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 

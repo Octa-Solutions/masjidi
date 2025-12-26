@@ -1,8 +1,7 @@
 import { IslamicEvent, islamicEvents } from "@/data/islamicEvents";
 import { MasjidiDate } from "@/MasjidiDate";
 import { Prayer } from "@/Prayer";
-import { DateUtils } from "@/utils/date/DateUtils";
-import { wrapNumber } from "@/utils/math";
+import { DateUtils, wrapNumber } from "@masjidi/common";
 
 export enum MasjidiStatus {
   Clock = "clock",
@@ -123,7 +122,7 @@ export class Masjidi implements IMasjidi {
       type: "upcoming",
       secondsLeft: wrapNumber(
         upcomingPrayer.getTimeLeftForIqamaWait(this.now) +
-          upcomingPrayer.getOverriddenSettings(this.now).upcoming.offset * 60,
+        upcomingPrayer.getOverriddenSettings(this.now).upcoming.offset * 60,
         0,
         DateUtils.DAY_IN_SECONDS,
       ),

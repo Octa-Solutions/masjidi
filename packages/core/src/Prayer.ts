@@ -1,6 +1,5 @@
 import { MasjidiDate } from "@/MasjidiDate";
-import { wrapNumber } from "@/utils/math";
-import { DeepPartial, Prettify } from "@/utils/types";
+import { DeepPartial, Prettify, wrapNumber } from "@masjidi/common";
 
 export type PrayerUpcomingSettings = {
   activeOnlyWhenInOffset?: boolean;
@@ -42,7 +41,7 @@ export class Prayer implements IPrayer {
     readonly upcoming: null | PrayerUpcomingSettings = null,
     readonly dateOverrides: PrayerDateOverride[],
     public time: number,
-  ) {}
+  ) { }
 
   getOffsettedTime() {
     return wrapNumber(this.time + this.timeOffset, 0, 24 * 60);

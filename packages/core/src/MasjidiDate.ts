@@ -1,6 +1,4 @@
-import { DateUtils } from "@/utils/date/DateUtils";
-import { Hijri } from "@/utils/date/Hijri";
-import { DeepPartial, DeepReadonly } from "@/utils/types";
+import { DateUtils, DeepPartial, DeepReadonly, Hijri } from "@masjidi/common";
 
 export interface MasjidiDate {
   readonly time: {
@@ -59,12 +57,12 @@ export type MasjidiDateCondition = DeepPartial<
 
 export type MasjidiMultiDateCondition =
   | {
-      start: MasjidiDateCondition;
-      end: MasjidiDateCondition;
-    }
+    start: MasjidiDateCondition;
+    end: MasjidiDateCondition;
+  }
   | {
-      when: MasjidiDateCondition;
-    };
+    when: MasjidiDateCondition;
+  };
 
 export namespace MasjidiDate {
   export function factory(

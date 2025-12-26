@@ -6,17 +6,24 @@
     "test": "vitest run --coverage"
   },
   "exports": {
-    "./*": {
+    ".": {
       "types": {
-        "import": "./dist/*.d.ts",
-        "require": "./dist/*.d.cts"
+        "import": "./dist/index.d.ts",
+        "require": "./dist/index.d.cts"
       },
-      "import": "./dist/*.js",
-      "require": "./dist/*.cjs"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./providers": {
+      "types": {
+        "import": "./dist/providers.d.ts",
+        "require": "./dist/providers.d.cts"
+      },
+      "import": "./dist/providers.js",
+      "require": "./dist/providers.cjs"
     }
   },
   "dependencies": {
-    "@masjidi/common": "workspace:*",
-    "@tabby_ai/hijri-converter": "^1.0.5"
+    "@masjidi/common": "workspace:*"
   }
 }

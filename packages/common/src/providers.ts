@@ -1,0 +1,50 @@
+import { WebGlobalAudioPool } from "./utils/audio/WebGlobalAudioPool";
+import { CachedFetcher } from "./utils/fetch/CachedFetcher";
+import { DomFetcher } from "./utils/fetch/DomFetcher";
+import { SavedFetcher } from "./utils/fetch/SavedFetcher";
+import {
+    IndexedDBConfig,
+    IndexedDBStorageAPI,
+} from "./utils/storage/IndexedDBStorageAPI";
+import { NativeStorageAPI } from "./utils/storage/NativeStorageAPI";
+import { NoopStorageAPI } from "./utils/storage/NoopStorageAPI";
+
+// ! ||--------------------------------------------------------------------------------||
+// ! ||                                 Fetch Providers                                ||
+// ! ||--------------------------------------------------------------------------------||
+
+export const provideDomFetcher = (
+    ...params: ConstructorParameters<typeof DomFetcher>
+) => new DomFetcher(...params);
+
+export const provideCachedFetcher = (
+    ...params: ConstructorParameters<typeof CachedFetcher>
+) => new CachedFetcher(...params);
+
+export const provideSavedFetcher = (
+    ...params: ConstructorParameters<typeof SavedFetcher>
+) => new SavedFetcher(...params);
+
+// ! ||--------------------------------------------------------------------------------||
+// ! ||                                Storage Providers                               ||
+// ! ||--------------------------------------------------------------------------------||
+
+export const provideNativeStorage = (storage: Storage) =>
+    new NativeStorageAPI(storage);
+
+export const provideLocalStorageStorage = () =>
+    provideNativeStorage(localStorage);
+
+export const provideSessionStorageStorage = () =>
+    provideNativeStorage(sessionStorage);
+
+export const provideNoopStorage = () => new NoopStorageAPI();
+
+export const provideIndexedDBStorage = (config: IndexedDBConfig) =>
+    new IndexedDBStorageAPI(config);
+
+// ! ||--------------------------------------------------------------------------------||
+// ! ||                                Audio Providers                                 ||
+// ! ||--------------------------------------------------------------------------------||
+
+export const provideWebGlobalAudioPool = () => new WebGlobalAudioPool();
