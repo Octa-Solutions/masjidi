@@ -2,7 +2,7 @@
   "name": "@masjidi/common",
   "scripts": {
     "build": "tsup",
-    "test": "vitest"
+    "test": "vitest run --coverage"
   },
   "exports": {
     ".": {
