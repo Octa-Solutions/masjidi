@@ -1,9 +1,13 @@
-import { MasjidiDate, MasjidiMultiDateCondition } from "@/MasjidiDate";
+import {
+  MasjidiDate,
+  MasjidiMultiDateCondition,
+} from "@masjidi/core/MasjidiDate";
+import { DeepPartial } from "@masjidi/core/utils/types";
 import { describe, expect, test } from "vitest";
 
 describe("MasjidiDate.multiConditionMet", () => {
   const createTestDate = (
-    overrides: DeepPartial<MasjidiDate>
+    overrides: DeepPartial<MasjidiDate>,
   ): MasjidiDate => ({
     time: {
       hours: 0,

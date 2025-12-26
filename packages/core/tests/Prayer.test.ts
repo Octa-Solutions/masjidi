@@ -1,5 +1,5 @@
-import { MasjidiDate } from "@/MasjidiDate";
-import { IPrayer, Prayer } from "@/Prayer";
+import { MasjidiDate } from "@masjidi/core/MasjidiDate";
+import { IPrayer, Prayer } from "@masjidi/core/Prayer";
 import { describe, expect, it } from "vitest";
 
 const mPrayer = (
@@ -7,7 +7,7 @@ const mPrayer = (
     IPrayer,
     "time" | "duration" | "iqamaWaitDuration" | "azkarDuration"
   > &
-    Partial<IPrayer>
+    Partial<IPrayer>,
 ) =>
   ({
     key: "unknown",
@@ -16,12 +16,12 @@ const mPrayer = (
     upcoming: null,
     dateOverrides: [],
     ...rest,
-  } satisfies IPrayer);
+  }) satisfies IPrayer;
 
 const mDate = (time: string, dayOffset = 0) =>
   MasjidiDate.factory(
     new Date(`2025-01-${(dayOffset + 1).toString().padStart(2, "0")}T${time}`),
-    dayOffset
+    dayOffset,
   );
 
 const mTime = (hours: number, minutes: number) => hours * 60 + minutes;
@@ -34,7 +34,7 @@ describe("Prayer", () => {
         duration: 30,
         iqamaWaitDuration: 15,
         azkarDuration: 10,
-      })
+      }),
     );
     const date = mDate("05:05:00");
 
@@ -59,7 +59,7 @@ describe("Prayer", () => {
         duration: 30,
         iqamaWaitDuration: 15,
         azkarDuration: 10,
-      })
+      }),
     );
 
     it("should be in iqama wait", () => {
@@ -112,7 +112,7 @@ describe("Prayer", () => {
             upcoming: { name: "Override Upcoming", offset: 5 },
           },
         ],
-      })
+      }),
     );
     it("should override values when doesn't match", () => {
       const date = mDate("05:00:00", 1);
@@ -150,7 +150,7 @@ describe("Prayer", () => {
               duration: 25,
             },
           ],
-        })
+        }),
       );
 
       const date = mDate("05:00:00", 1);

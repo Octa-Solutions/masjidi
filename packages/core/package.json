@@ -1,0 +1,21 @@
+{
+  "name": "@masjidi/core",
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest"
+  },
+  "exports": {
+    "./*": {
+      "types": {
+        "import": "./dist/*.d.ts",
+        "require": "./dist/*.d.cts"
+      },
+      "import": "./dist/*.js",
+      "require": "./dist/*.cjs"
+    }
+  },
+  "dependencies": {
+    "@masjidi/common": "workspace:*",
+    "@tabby_ai/hijri-converter": "^1.0.5"
+  }
+}

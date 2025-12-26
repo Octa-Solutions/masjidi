@@ -1,6 +1,6 @@
-import { Masjidi, MasjidiStatus } from "@/Masjidi";
-import { MasjidiDate } from "@/MasjidiDate";
-import { Prayer } from "@/Prayer";
+import { Masjidi, MasjidiStatus } from "@masjidi/core/Masjidi";
+import { MasjidiDate } from "@masjidi/core/MasjidiDate";
+import { Prayer } from "@masjidi/core/Prayer";
 import { describe, expect, test } from "vitest";
 
 const createMasjidiDate = (time: string, dayOffset = 0) => {
@@ -183,10 +183,10 @@ describe("Prayer", () => {
       const nonMatchingDate = MasjidiDate.factory(new Date("2025-01-02T05:00"));
 
       expect(prayer.getOverriddenSettings(matchingDate).iqamaWaitDuration).toBe(
-        30
+        30,
       );
       expect(
-        prayer.getOverriddenSettings(nonMatchingDate).iqamaWaitDuration
+        prayer.getOverriddenSettings(nonMatchingDate).iqamaWaitDuration,
       ).toBe(15);
     });
   });
@@ -195,7 +195,7 @@ describe("Prayer", () => {
     const prayer = Prayer.factory(basePrayer);
     const date = createMasjidiDate("05:10");
     expect(prayer.getTimeLeftForIqama(date)).toBe(
-      (5 * 60 + 15) * 60 - (5 * 60 * 60 + 10 * 60)
+      (5 * 60 + 15) * 60 - (5 * 60 * 60 + 10 * 60),
     );
   });
 });

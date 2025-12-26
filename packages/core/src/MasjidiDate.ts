@@ -1,5 +1,6 @@
 import { DateUtils } from "@/utils/date/DateUtils";
 import { Hijri } from "@/utils/date/Hijri";
+import { DeepPartial, DeepReadonly } from "@/utils/types";
 
 export interface MasjidiDate {
   readonly time: {
