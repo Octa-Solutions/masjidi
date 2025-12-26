@@ -1,0 +1,17 @@
+{
+  "name": "examples",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "tsx usage.ts"
+  },
+  "dependencies": {
+    "@masjidi/common": "workspace:*",
+    "@masjidi/core": "workspace:*",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.3"
+  }
+}
