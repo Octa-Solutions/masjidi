@@ -9,9 +9,21 @@ type AlAdhanCalendarAPIResponse = {
 };
 
 // TODO: Clean the code
+/**
+ * A prayer times strategy that fetches data from the AlAdhan API.
+ */
 export class MasjidiAlAdhanAPIPrayerTimesStrategy extends MasjidiPrayerTimesStrategy {
   readonly isDayLightSaved = true;
 
+  /**
+   * Creates a new instance of `MasjidiAlAdhanAPIPrayerTimesStrategy`.
+   *
+   * @param dependencies - The dependencies required for the strategy.
+   * @param dependencies.fetcher - The fetcher to use for making API requests.
+   * @param dependencies.apiOptions - The options for the AlAdhan API.
+   * @param dependencies.protocol - The protocol to use for the API URL ("http", "https", or "auto").
+   * @param dependencies.savedKey - The key to use for saving/caching the data.
+   */
   constructor(
     readonly dependencies: {
       readonly fetcher: ISavedStringFetcher | IStringFetcher;
@@ -45,6 +57,12 @@ export class MasjidiAlAdhanAPIPrayerTimesStrategy extends MasjidiPrayerTimesStra
 
     return protocol;
   }
+
+  /**
+   * Retrieves the prayer timings from the AlAdhan API.
+   *
+   * @returns A promise that resolves to `MasjidiPrayerTimings`.
+   */
   async getCalendar() {
     // Fixed leap year for 366 days
     const aladhanAPIUrl = new URL(

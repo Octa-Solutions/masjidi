@@ -1,15 +1,37 @@
 import { StorageAPI, StorageAPIItem } from "@/utils/storage/StorageAPI";
 
+/**
+ * Configuration for the IndexedDB storage.
+ */
 export interface IndexedDBConfig {
+  /**
+   * The name of the database.
+   */
   dbName: string;
+
+  /**
+   * The name of the object store.
+   */
   storeName: string;
+
+  /**
+   * The version of the database. Defaults to 1.
+   */
   version?: number;
 }
 
+/**
+ * A storage implementation that uses IndexedDB.
+ */
 export class IndexedDBStorageAPI extends StorageAPI {
   private db: IDBDatabase | null = null;
   private initPromise: Promise<void> | null = null;
 
+  /**
+   * Creates a new instance of `IndexedDBStorageAPI`.
+   *
+   * @param config - The configuration for the IndexedDB.
+   */
   constructor(private config: IndexedDBConfig) {
     super();
   }
@@ -47,6 +69,12 @@ export class IndexedDBStorageAPI extends StorageAPI {
     });
   }
 
+  /**
+   * Retrieves multiple items from storage.
+   *
+   * @param keys - The keys of the items to retrieve.
+   * @returns A promise that resolves to an object containing the retrieved items.
+   */
   async getAll<T extends Record<string, StorageAPIItem>>(
     keys: (keyof T)[],
   ): Promise<{ [P in keyof T]: T[P] | undefined }> {
@@ -88,6 +116,12 @@ export class IndexedDBStorageAPI extends StorageAPI {
     });
   }
 
+  /**
+   * Sets multiple items in storage.
+   *
+   * @param records - An object containing the items to set.
+   * @returns A promise that resolves when the items are set.
+   */
   async setAll<T extends Record<string, StorageAPIItem>>(
     records: T,
   ): Promise<void> {
@@ -115,6 +149,12 @@ export class IndexedDBStorageAPI extends StorageAPI {
     });
   }
 
+  /**
+   * Removes multiple items from storage.
+   *
+   * @param keys - The keys of the items to remove.
+   * @returns A promise that resolves when the items are removed.
+   */
   async removeAll(keys: string[]): Promise<void> {
     await this.ensureInit();
     return new Promise((resolve, reject) => {

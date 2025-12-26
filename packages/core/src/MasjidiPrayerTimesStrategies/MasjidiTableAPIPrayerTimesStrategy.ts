@@ -5,9 +5,20 @@ import {
   IStringFetcherOptions,
 } from "@masjidi/common";
 
+/**
+ * A prayer times strategy that fetches data from a table-based API (e.g., a JSON file).
+ */
 export class MasjidiTableAPIPrayerTimesStrategy extends MasjidiPrayerTimesStrategy {
   readonly isDayLightSaved = false;
 
+  /**
+   * Creates a new instance of `MasjidiTableAPIPrayerTimesStrategy`.
+   *
+   * @param dependencies - The dependencies required for the strategy.
+   * @param dependencies.fetcher - The fetcher to use for making requests.
+   * @param dependencies.fetchOptions - The options for the fetch request.
+   * @param dependencies.savedKey - The key to use for saving/caching the data.
+   */
   constructor(
     readonly dependencies: {
       readonly fetcher: ISavedStringFetcher | IStringFetcher;
@@ -19,6 +30,11 @@ export class MasjidiTableAPIPrayerTimesStrategy extends MasjidiPrayerTimesStrate
     super();
   }
 
+  /**
+   * Retrieves the prayer timings from the table API.
+   *
+   * @returns A promise that resolves to `MasjidiPrayerTimings`.
+   */
   async getCalendar() {
     return await this.dependencies.fetcher
       .fetch(

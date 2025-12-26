@@ -8,6 +8,10 @@ import { DateUtils, EventListener, wrapNumber } from "@masjidi/common";
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
+/**
+ * Controller class for the Masjidi application.
+ * It handles the main loop, event dispatching, and interaction with the `Masjidi` instance.
+ */
 export class MasjidiController extends EventListener<{
   // Tick Events
   init: [];
@@ -24,6 +28,14 @@ export class MasjidiController extends EventListener<{
   adhan: [prayer: Prayer, offset: () => number];
   iqama: [prayer: Prayer];
 }> {
+  /**
+   * Creates a new instance of `MasjidiController`.
+   *
+   * @param masjidi - The `Masjidi` instance to control.
+   * @param options - Configuration options for the controller.
+   * @param options.timesStrategy - The strategy for calculating prayer times.
+   * @param options.hadithInterval - The interval in milliseconds for rotating Hadiths.
+   */
   constructor(
     private masjidi: Masjidi,
     private options: {
@@ -138,6 +150,11 @@ export class MasjidiController extends EventListener<{
     this.dispatch("hadith", hadith);
   }
 
+  /**
+   * Fetches the prayer timings using the configured strategy.
+   *
+   * @returns A promise that resolves to the `MasjidiPrayerTimings`.
+   */
   fetch() {
     if (this.timingsPromise !== null) {
       return this.timingsPromise;
@@ -153,6 +170,10 @@ export class MasjidiController extends EventListener<{
     return this.timingsPromise;
   }
 
+  /**
+   * Starts the controller loop.
+   * It fetches timings, sets up intervals for ticks and Hadith rotation, and dispatches initial events.
+   */
   async start() {
     await this.fetch();
 
@@ -180,6 +201,9 @@ export class MasjidiController extends EventListener<{
     this.hadith();
   }
 
+  /**
+   * Stops the controller loop and clears all intervals and listeners.
+   */
   destroy() {
     if (this.tickInterval !== null) {
       clearInterval(this.tickInterval);

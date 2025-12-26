@@ -1,6 +1,14 @@
 import { MasjidiMultiDateCondition } from "@/MasjidiDate";
 
+/**
+ * Type representing a key for an Islamic event.
+ */
 export type IslamicEvent = keyof typeof islamicEvents;
+
+/**
+ * A dictionary of Islamic events and their date conditions.
+ * Keys are event names, and values are conditions to match the date.
+ */
 export const islamicEvents = {
   FIRST_MONDAY_RAJAB: {
     when: { hijri: { month: 7, dayOfWeek: 2, weekOfMonth: 1 } },

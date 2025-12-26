@@ -1,12 +1,30 @@
+/**
+ * Options for the AlAdhan API.
+ */
 export interface AlAdhanAPIOptions {
+  /**
+   * The latitude of the location.
+   */
   latitude?: number;
+
+  /**
+   * The longitude of the location.
+   */
   longitude?: number;
 
+  /**
+   * The calculation method to use.
+   */
   calculationMethod?: AlAdhanAPICalculationMethod;
+
   /**
    * Which Shafaq to use if the 'method' query parameter is MOONSIGHTING_COMMITTEE_WORLDWIDE
    */
   shafaq?: AlAdhanAPIShafaq;
+
+  /**
+   * The juristic school to use for Asr calculation.
+   */
   school?: AlAdhanAPISchool;
 
   /**
@@ -31,9 +49,15 @@ export interface AlAdhanAPIOptions {
    */
   timezonestring?: string;
 
+  /**
+   * Whether to return dates in ISO 8601 format.
+   */
   iso8601?: boolean;
 }
 
+/**
+ * Calculation methods supported by the AlAdhan API.
+ */
 export const AlAdhanAPICalculationMethod = {
   JAFARI_SHIA_ITHNA_ASHARI: 0,
   UNIVERSITY_OF_ISLAMIC_SCIENCES_KARACHI: 1,
@@ -65,9 +89,15 @@ export const AlAdhanAPICalculationMethod = {
   CUSTOM: 99,
 } as const;
 
+/**
+ * Type representing a calculation method for AlAdhan API.
+ */
 export type AlAdhanAPICalculationMethod =
   (typeof AlAdhanAPICalculationMethod)[keyof typeof AlAdhanAPICalculationMethod];
 
+/**
+ * Shafaq options for the AlAdhan API.
+ */
 export const AlAdhanAPIShafaq = {
   /** General */
   GENERAL: "general",
@@ -77,13 +107,22 @@ export const AlAdhanAPIShafaq = {
   ABYAD: "abyad",
 } as const;
 
+/**
+ * Type representing a Shafaq option for AlAdhan API.
+ */
 export type AlAdhanAPIShafaq =
   (typeof AlAdhanAPIShafaq)[keyof typeof AlAdhanAPIShafaq];
 
+/**
+ * Juristic schools supported by the AlAdhan API.
+ */
 export const AlAdhanAPISchool = {
   STANDARD: 0,
   HANAFI: 1,
 };
 
+/**
+ * Type representing a juristic school for AlAdhan API.
+ */
 export type AlAdhanAPISchool =
   (typeof AlAdhanAPISchool)[keyof typeof AlAdhanAPISchool];

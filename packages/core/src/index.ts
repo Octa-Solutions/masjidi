@@ -6,6 +6,5 @@ export * from "@/MasjidiPrayerTimesStrategies/AlAdhanAPIOptions";
 export * from "@/MasjidiPrayerTimesStrategies/MasjidiAlAdhanAPIPrayerTimesStrategy";
 export * from "@/MasjidiPrayerTimesStrategies/MasjidiTableAPIPrayerTimesStrategy";
 export * from "@/MasjidiPrayerTimesStrategy";
-export * from "@/NotificationController";
 export * from "@/Prayer";
 export * from "@/utils/factories/prayersListFactory";

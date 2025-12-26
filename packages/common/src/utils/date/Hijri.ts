@@ -4,7 +4,17 @@ const minGregorian = new Date("1924-08-01 00:00:00");
 const maxGregorian = new Date("2077-11-16 23:59:59");
 
 const reusableDate = { day: NaN, month: NaN, year: NaN };
+/**
+ * A utility class for Hijri date conversions and adjustments.
+ */
 export class Hijri {
+  /**
+   * Converts a Gregorian date to a Hijri date.
+   *
+   * @param date - The Gregorian date to convert.
+   * @returns A tuple representing the Hijri date: [day, month, year].
+   * @throws Error if the date cannot be converted.
+   */
   static fromGregorian(date: Date): [number, number, number] {
     if (date >= minGregorian && date <= maxGregorian) {
       reusableDate.day = date.getDate();
@@ -28,6 +38,13 @@ export class Hijri {
     return [+day, +month, +year];
   }
 
+  /**
+   * Adjusts a Hijri date by a specified number of days.
+   *
+   * @param date - The Hijri date to adjust: [day, month, year].
+   * @param daysOffset - The number of days to offset.
+   * @returns The adjusted Hijri date: [day, month, year].
+   */
   static adjust(
     [hijriDay, hijriMonth, hijriYear]: [number, number, number],
     daysOffset: number,
@@ -61,6 +78,12 @@ export class Hijri {
     return [hijriDay, hijriMonth, hijriYear];
   }
 
+  /**
+   * Calculates the week of the month for a given Hijri date.
+   *
+   * @param date - The Hijri date: [day, month, year].
+   * @returns The week of the month (1-indexed).
+   */
   static getWeekOfMonth(date: readonly [number, number, number]) {
     const day = date[0];
 

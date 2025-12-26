@@ -1,5 +1,9 @@
 import { DateUtils, DeepPartial, DeepReadonly, Hijri } from "@masjidi/common";
 
+/**
+ * Interface representing a date in the Masjidi application.
+ * It includes time, Gregorian date, and Hijri date components.
+ */
 export interface MasjidiDate {
   readonly time: {
     readonly hours: number;
@@ -27,6 +31,11 @@ export interface MasjidiDate {
     readonly year: number;
   };
 }
+
+/**
+ * Type representing a condition for matching a `MasjidiDate`.
+ * It allows partial matching of time, Gregorian, and Hijri components.
+ */
 export type MasjidiDateCondition = DeepPartial<
   DeepReadonly<{
     time: {
@@ -55,16 +64,30 @@ export type MasjidiDateCondition = DeepPartial<
   }>
 >;
 
+/**
+ * Type representing a multi-condition for matching a `MasjidiDate`.
+ * It can be a range (start/end) or a single point (when).
+ */
 export type MasjidiMultiDateCondition =
   | {
-    start: MasjidiDateCondition;
-    end: MasjidiDateCondition;
-  }
+      start: MasjidiDateCondition;
+      end: MasjidiDateCondition;
+    }
   | {
-    when: MasjidiDateCondition;
-  };
+      when: MasjidiDateCondition;
+    };
 
+/**
+ * Namespace containing utility functions for `MasjidiDate`.
+ */
 export namespace MasjidiDate {
+  /**
+   * Creates a `MasjidiDate` from a Gregorian date.
+   *
+   * @param gregorian - The Gregorian date.
+   * @param hijriDayAdjustment - The adjustment for the Hijri date in days. Defaults to 0.
+   * @returns A new `MasjidiDate` object.
+   */
   export function factory(
     gregorian: Date,
     hijriDayAdjustment: number = 0,
@@ -106,10 +129,24 @@ export namespace MasjidiDate {
     } as const;
   }
 
+  /**
+   * Checks if a `MasjidiDate` matches a given condition.
+   *
+   * @param date - The date to check.
+   * @param test - The condition to match against.
+   * @returns `true` if the date matches the condition, `false` otherwise.
+   */
   export function matches(date: MasjidiDate, test: MasjidiDateCondition) {
     return MasjidiDate.multiConditionMet({ when: test }, date);
   }
 
+  /**
+   * Checks if a `MasjidiDate` matches a multi-condition (range or single point).
+   *
+   * @param condition - The multi-condition to check.
+   * @param date - The date to check.
+   * @returns `true` if the date matches the condition, `false` otherwise.
+   */
   export function multiConditionMet(
     condition: MasjidiMultiDateCondition,
     date: MasjidiDate,

@@ -1,5 +1,8 @@
 import { IPrayer, Prayer } from "@/Prayer";
 
+/**
+ * A list of standard prayer keys.
+ */
 export const PRAYERS = [
   "Fajr",
   "Sunrise",
@@ -9,8 +12,17 @@ export const PRAYERS = [
   "Isha",
 ] as const;
 
+/**
+ * Type representing a valid prayer key.
+ */
 export type PrayerKey = (typeof PRAYERS)[number];
 
+/**
+ * Factory function to create a list of `Prayer` objects from a configuration object.
+ *
+ * @param config - A partial record mapping prayer keys to their configuration.
+ * @returns An array of `Prayer` objects.
+ */
 export const prayersListFactory = (
   config: Partial<Record<PrayerKey, Partial<Omit<IPrayer, "key">>>>,
 ) => {
