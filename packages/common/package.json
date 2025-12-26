@@ -1,6 +1,6 @@
 {
   "name": "@masjidi/common",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "scripts": {
     "build": "tsup",
     "test": "vitest run --coverage"
