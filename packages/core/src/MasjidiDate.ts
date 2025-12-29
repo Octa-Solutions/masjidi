@@ -154,28 +154,85 @@ export namespace MasjidiDate {
     const start = "when" in condition ? condition.when : condition.start;
     const end = "when" in condition ? condition.when : condition.end;
 
-    const props = {
-      time: ["hours", "minutes", "minuteOfDay", "seconds", "secondOfDay"],
-      gregorian: ["dayOfMonth", "dayOfWeek", "weekOfMonth", "month", "year"],
-      hijri: ["dayOfMonth", "dayOfWeek", "weekOfMonth", "month", "year"],
+    const hierarchicalGroups = [
+      {
+        prop: "time",
+        fields: ["hours", "minutes", "seconds"],
+        multipliers: [3600, 60, 1],
+      },
+      {
+        prop: "gregorian",
+        fields: ["year", "month", "dayOfMonth"],
+        multipliers: [10000, 100, 1],
+      },
+      {
+        prop: "hijri",
+        fields: ["year", "month", "dayOfMonth"],
+        multipliers: [10000, 100, 1],
+      },
+    ] as const;
+
+    const independentProps = {
+      time: ["minuteOfDay", "secondOfDay"],
+      gregorian: ["dayOfWeek", "weekOfMonth"],
+      hijri: ["dayOfWeek", "weekOfMonth"],
     } as const;
 
-    for (const prop in props) {
-      const propCondition = props[prop as keyof typeof props];
-      for (const conditionProp of propCondition) {
-        // @ts-ignore
-        const startValue = start[prop]?.[conditionProp];
-        // @ts-ignore
-        const endValue = end[prop]?.[conditionProp];
-        // @ts-ignore
-        const dateValue = date[prop]?.[conditionProp];
+    for (const group of hierarchicalGroups) {
+      let startVal = 0;
+      let endVal = 0;
+      let dateVal = 0;
+      let hasCondition = false;
 
-        if (startValue === undefined || endValue === undefined) continue;
-        if (dateValue === undefined) return false;
-        if (startValue <= endValue) {
-          if (dateValue < startValue || dateValue > endValue) return false;
+      for (let i = 0; i < group.fields.length; i++) {
+        const field = group.fields[i];
+        // @ts-ignore
+        const s = start[group.prop]?.[field];
+        // @ts-ignore
+        const e = end[group.prop]?.[field];
+        // @ts-ignore
+        const d = date[group.prop]?.[field];
+
+        if (s !== undefined && e !== undefined) {
+          startVal += s * group.multipliers[i];
+          endVal += e * group.multipliers[i];
+          dateVal += d * group.multipliers[i];
+          hasCondition = true;
+        } else if (s !== undefined || e !== undefined) {
+          // If only one is defined, we can't do a hierarchical range check easily
+          // but the current logic requires both to be defined to act as a range.
+          // If they are different, we ignore them for hierarchical check and they might be checked independently if added to independentProps.
+          // However, for year/month/day, they should usually be used together.
+        }
+      }
+
+      if (hasCondition) {
+        if (startVal <= endVal) {
+          if (dateVal < startVal || dateVal > endVal) return false;
         } else {
-          if (dateValue < startValue && dateValue > endValue) return false;
+          // Wrapped range
+          if (dateVal < startVal && dateVal > endVal) return false;
+        }
+      }
+    }
+
+    for (const prop in independentProps) {
+      const fields = independentProps[prop as keyof typeof independentProps];
+      for (const field of fields) {
+        // @ts-ignore
+        const s = start[prop]?.[field];
+        // @ts-ignore
+        const e = end[prop]?.[field];
+        // @ts-ignore
+        const d = date[prop]?.[field];
+
+        if (s === undefined || e === undefined) continue;
+        if (d === undefined) return false;
+
+        if (s <= e) {
+          if (d < s || d > e) return false;
+        } else {
+          if (d < s && d > e) return false;
         }
       }
     }
