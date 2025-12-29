@@ -1,11 +1,13 @@
 {
   "name": "@masjidi/core",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "scripts": {
     "build": "tsup",
     "test": "vitest run --coverage"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": {
       "types": {

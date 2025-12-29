@@ -1,5 +1,11 @@
 # @masjidi/core
 
+## 1.2.1
+
+### Patch Changes
+
+- Implement proper hierarchical range comparisons in masjidi date multi condition
+
 ## 1.2.0
 
 ### Minor Changes
