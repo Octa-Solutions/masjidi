@@ -1,6 +1,9 @@
 import { DeepPartial } from "@masjidi/common";
-import { MasjidiDate, MasjidiMultiDateCondition } from "../src/MasjidiDate";
-import { islamicEvents } from "../src/data/islamicEvents";
+import {
+  islamicEvents,
+  MasjidiDate,
+  MasjidiMultiDateCondition,
+} from "@masjidi/core";
 import { describe, expect, test } from "vitest";
 
 describe("Islamic Events Range Tests", () => {

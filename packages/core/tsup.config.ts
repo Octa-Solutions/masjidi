@@ -7,6 +7,8 @@ export const tsup: Options = {
   clean: true,
   splitting: false,
   target: "node18",
+  // @ts-expect-error process is global in node
+  sourcemap: process.env.SOURCEMAP === "true",
   outExtension({ format }) {
     return {
       js: format === "cjs" ? ".cjs" : ".js",

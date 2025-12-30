@@ -1,5 +1,5 @@
 import { DeepPartial } from "@masjidi/common";
-import { MasjidiDate, MasjidiMultiDateCondition } from "../src/MasjidiDate";
+import { MasjidiDate, MasjidiMultiDateCondition } from "@masjidi/core";
 import { describe, expect, test } from "vitest";
 
 describe("MasjidiDate.multiConditionMet", () => {
