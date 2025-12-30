@@ -122,4 +122,47 @@ describe("MasjidiDate.multiConditionMet", () => {
     };
     expect(MasjidiDate.multiConditionMet(condition, date)).toBe(true);
   });
+
+  test("handles independent props (minuteOfDay)", () => {
+    const date = createTestDate({ time: { minuteOfDay: 600 } }); // 10:00
+    const condition: MasjidiMultiDateCondition = {
+      start: { time: { minuteOfDay: 500 } },
+      end: { time: { minuteOfDay: 700 } },
+    };
+    expect(MasjidiDate.multiConditionMet(condition, date)).toBe(true);
+
+    const invalidDate = createTestDate({ time: { minuteOfDay: 800 } });
+    expect(MasjidiDate.multiConditionMet(condition, invalidDate)).toBe(false);
+  });
+
+  test("handles wrapped independent props", () => {
+    const date = createTestDate({ time: { minuteOfDay: 1400 } });
+    const condition: MasjidiMultiDateCondition = {
+      start: { time: { minuteOfDay: 1300 } },
+      end: { time: { minuteOfDay: 100 } },
+    };
+    expect(MasjidiDate.multiConditionMet(condition, date)).toBe(true);
+
+    const matchDate = createTestDate({ time: { minuteOfDay: 50 } });
+    expect(MasjidiDate.multiConditionMet(condition, matchDate)).toBe(true);
+
+    const noMatchDate = createTestDate({ time: { minuteOfDay: 500 } });
+    expect(MasjidiDate.multiConditionMet(condition, noMatchDate)).toBe(false);
+  });
+
+  test("returns false if independent prop is missing in date but present in condition", () => {
+    // @ts-ignore
+    const date: MasjidiDate = { time: {}, gregorian: {}, hijri: {} };
+    const condition: MasjidiMultiDateCondition = {
+      when: { time: { minuteOfDay: 10 } },
+    };
+    expect(MasjidiDate.multiConditionMet(condition, date)).toBe(false);
+  });
+
+  test("factory method handles hijriDayAdjustment", () => {
+    const date = new Date("2023-01-01");
+    const mDate = MasjidiDate.factory(date, 1);
+    const mDate2 = MasjidiDate.factory(date, 0);
+    expect(mDate.hijri.dayOfMonth).not.toBe(mDate2.hijri.dayOfMonth);
+  });
 });

@@ -39,7 +39,7 @@ describe("Islamic Events Range Tests", () => {
   });
 
   const checkEvent = (
-    condition: MasjidiMultiDateCondition | readonly MasjidiMultiDateCondition[],
+    condition: MasjidiMultiDateCondition,
     date: MasjidiDate,
   ) => {
     if (Array.isArray(condition)) {

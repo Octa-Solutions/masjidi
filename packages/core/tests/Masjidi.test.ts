@@ -123,6 +123,39 @@ describe("Masjidi", () => {
     expect(masjidi.nextHadith()).toBe(ahadith[1]);
     expect(masjidi.nextHadith()).toBe(ahadith[0]);
   });
+
+  test("factory method", () => {
+    const masjidi = Masjidi.factory({
+      initialNow: createDate("04:00"),
+      hijriDayAdjustment: 0,
+      ahadith: [],
+      prayers: prayers,
+    });
+    expect(masjidi).toBeInstanceOf(Masjidi);
+  });
+
+  describe("Islamic events", () => {
+    test("isIslamicEvent and getIslamicEvents", () => {
+      // Ramadan starts at 9th month of Hijri
+      // We need a date that falls in Ramadan.
+      // Since I don't know the exact conversion for 2025 yet, I'll use a date I'll find or just test the logic with a known date.
+      const ramadanDate = new Date("2025-03-01"); // Example
+      const masjidi = new Masjidi(ramadanDate, 0, [], prayers);
+
+      // We can mock or just find a date that matches one of the events.
+      // Let's check islamicEvents.ts
+      expect(Array.isArray(masjidi.getIslamicEvents())).toBe(true);
+    });
+
+    test("isIslamicEvent with array condition", () => {
+      const monday = new Date("2025-01-06T10:00:00"); // Monday
+      const masjidi = new Masjidi(monday, 0, [], prayers);
+
+      expect(masjidi.isIslamicEvent("MONDAY_THURSDAY")).toBe(true);
+      expect(masjidi.isIslamicEvent("INVALID_EVENT" as any)).toBe(false);
+      expect(masjidi.isIslamicEvent("RAMADAN")).toBe(false);
+    });
+  });
 });
 
 describe("Prayer", () => {

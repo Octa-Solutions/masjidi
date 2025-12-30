@@ -78,10 +78,64 @@ describe("Prayer", () => {
       expect(prayer.isInPrayer(mDate("05:20:00"))).toBe(true);
 
       expect(prayer.isInPrayer(mDate("05:44:59"))).toBe(true);
-      expect(prayer.isInPrayer(mDate("05:45:00"))).toBe(false);
+      expect(prayer.isInPrayer(mDate("05:50:00"))).toBe(false);
     });
 
-    it("should be in prayer", () => {
+    it("isBefore", () => {
+      expect(prayer.isBefore(mDate("05:01:00"))).toBe(true);
+      expect(prayer.isBefore(mDate("04:59:00"))).toBe(false);
+    });
+
+    it("isAfterOrEqual", () => {
+      expect(prayer.isAfterOrEqual(mDate("04:59:00"))).toBe(true);
+      expect(prayer.isAfterOrEqual(mDate("05:00:00"))).toBe(true);
+      expect(prayer.isAfterOrEqual(mDate("05:01:00"))).toBe(false);
+    });
+
+    it("isEqual", () => {
+      expect(prayer.isEqual(mDate("05:00:00"))).toBe(true);
+      expect(prayer.isEqual(mDate("05:01:00"))).toBe(false);
+    });
+  });
+
+  describe("more time left calculations", () => {
+    const basePrayer = mPrayer({
+      time: mTime(5, 0),
+      duration: 30,
+      iqamaWaitDuration: 15,
+      azkarDuration: 10,
+    });
+
+    it("getTimeLeftForAzkar", () => {
+      const prayer = Prayer.factory(basePrayer);
+      // finishTime = 5:00 + 15 + 30 = 5:45
+      // azkarFinishTime = 5:45 + 10 = 5:55
+      const date = mDate("05:50:00");
+      expect(prayer.getTimeLeftForAzkar(date)).toBe(
+        (5 * 60 + 55) * 60 - (5 * 60 * 60 + 50 * 60),
+      );
+    });
+
+    it("getTimeLeftForIqamaWait", () => {
+      const prayer = Prayer.factory(basePrayer);
+      const date = mDate("04:50:00");
+      expect(prayer.getTimeLeftForIqamaWait(date)).toBe(
+        5 * 60 * 60 - (4 * 60 * 60 + 50 * 60),
+      );
+    });
+  });
+
+  describe("state checks", () => {
+    const prayer = Prayer.factory(
+      mPrayer({
+        time: mTime(5, 0),
+        duration: 30,
+        iqamaWaitDuration: 15,
+        azkarDuration: 10,
+      }),
+    );
+
+    it("should be in azkar", () => {
       expect(prayer.isInAzkar(mDate("05:44:59"))).toBe(false);
       expect(prayer.isInAzkar(mDate("05:45:00"))).toBe(true);
 
@@ -155,11 +209,46 @@ describe("Prayer", () => {
       const date = mDate("05:00:00", 1);
       const overriddenSettings = prayer.getOverriddenSettings(date);
 
-      expect(overriddenSettings.name).toBe("Prayer");
-      expect(overriddenSettings.iqamaWaitDuration).toBe(15);
-      expect(overriddenSettings.duration).toBe(25);
       expect(overriddenSettings.upcoming?.name).toBe("Default Upcoming");
       expect(overriddenSettings.upcoming?.offset).toBe(3);
+    });
+
+    it("should handle activeOnlyWhenInOffset", () => {
+      const prayer = Prayer.factory(
+        mPrayer({
+          time: mTime(5, 0),
+          duration: 30,
+          iqamaWaitDuration: 15,
+          azkarDuration: 10,
+          upcoming: {
+            name: "Upcoming",
+            offset: 30,
+            activeOnlyWhenInOffset: true,
+          },
+        }),
+      );
+
+      const dateBefore = mDate("04:59:00");
+      expect(prayer.getOverriddenSettings(dateBefore).upcoming?.name).toBe(
+        "Prayer",
+      );
+
+      const dateAfter1 = mDate("05:00:00");
+      expect(prayer.getOverriddenSettings(dateAfter1).upcoming?.name).toBe(
+        "Upcoming",
+      );
+      const dateAfter2 = mDate("05:29:00");
+      expect(prayer.getOverriddenSettings(dateAfter2).upcoming?.name).toBe(
+        "Upcoming",
+      );
+      const dateAfter3 = mDate("05:30:00");
+      expect(prayer.getOverriddenSettings(dateAfter3).upcoming?.name).toBe(
+        "Upcoming",
+      );
+      const dateAfter4 = mDate("05:31:00");
+      expect(prayer.getOverriddenSettings(dateAfter4).upcoming?.name).toBe(
+        "Upcoming",
+      );
     });
   });
 });

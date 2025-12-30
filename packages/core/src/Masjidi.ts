@@ -245,6 +245,8 @@ export class Masjidi implements IMasjidi {
   isIslamicEvent(event: IslamicEvent) {
     const condition = islamicEvents[event as IslamicEvent];
 
+    if (!condition) return false;
+
     if (condition instanceof Array) {
       for (const subCondition of condition) {
         if (MasjidiDate.multiConditionMet(subCondition, this.now)) return true;

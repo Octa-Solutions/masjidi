@@ -270,8 +270,7 @@ export class Prayer implements IPrayer {
     ) =>
       upcoming
         ? upcoming.activeOnlyWhenInOffset && upcoming.offset
-          ? this.getOffsettedTime() + upcoming.offset - date.time.minuteOfDay <=
-            upcoming.offset
+          ? date.time.minuteOfDay >= this.getOffsettedTime()
             ? upcoming
             : null
           : upcoming
