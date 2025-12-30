@@ -5,7 +5,7 @@ export const tsup: Options = {
   format: ["esm", "cjs"],
   dts: true,
   clean: true,
-  splitting: false,
+  splitting: true,
   target: "node18",
   // @ts-expect-error process is global in node
   sourcemap: process.env.SOURCEMAP === "true",
