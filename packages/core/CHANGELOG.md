@@ -1,5 +1,13 @@
 # @masjidi/core
 
+## 1.2.2
+
+### Patch Changes
+
+- Enable code build splitting
+- Updated dependencies
+  - @masjidi/common@0.2.1
+
 ## 1.2.1
 
 ### Patch Changes

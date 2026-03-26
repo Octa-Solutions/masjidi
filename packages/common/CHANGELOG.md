@@ -1,5 +1,11 @@
 # @masjidi/common
 
+## 0.2.1
+
+### Patch Changes
+
+- Enable code build splitting
+
 ## 0.2.0
 
 ### Minor Changes
