@@ -48,6 +48,44 @@ export const DEFAULT_THEMES = {
 export class ThemeExtractor {
   constructor(readonly dominantColorExtractor: DominantColorExtractor) {}
 
+  themeFromSimpleColors(
+    theme: "light" | "dark",
+    primary: Color,
+    secondary: Color,
+    ui: Color,
+    border: Color,
+  ): Theme {
+    const themeSign = theme === "light" ? 1 : -1;
+
+    // TODO: Add color hint
+    const brightText = primary.getIdealForegroundColor();
+
+    const background =
+      theme === "light"
+        ? Color.white.interpolateOKLCH(secondary, 0.1)
+        : Color.black.interpolateOKLCH(secondary, 0.1);
+
+    const pattern = (
+      theme === "light" ? Color.fromHex("#c7a04d") : Color.fromHex("#433a28")
+    ).interpolateOKLCH(secondary, 0.5);
+
+    const subtle = ui.withModifiedOKLCH((oklch) => {
+      oklch.L -= themeSign * 0.1;
+      oklch.L = Math.min(1, Math.max(0, oklch.L));
+    });
+
+    return {
+      ui,
+      text: secondary,
+      darkerText: primary,
+      brightText,
+      border,
+      subtle,
+      background,
+      pattern,
+    };
+  }
+
   themeFromPrimaryAndSecondary(
     primary: Color,
     secondary: Color,
@@ -70,20 +108,18 @@ export class ThemeExtractor {
     const primaryAdjusted = stretchColorLightnessContrast(primary);
     const secondaryAdjusted = stretchColorLightnessContrast(secondary);
 
-    const brightText = primaryAdjusted.getIdealForegroundColor();
-
     const border = primaryAdjusted.hasHigherColorfulness(secondaryAdjusted)
       ? primaryAdjusted
       : secondaryAdjusted;
 
-    const subtle =
-      theme === "light" ? Color.fromHex("#d4d4d4") : Color.fromHex("#292929");
-
-    const background = theme === "light" ? Color.white : Color.black;
-
-    const pattern = (
-      theme === "light" ? Color.fromHex("#c7a04d") : Color.fromHex("#433a28")
-    ).interpolateOKLCH(secondaryAdjusted, 0.5);
+    const { background, pattern, subtle, brightText } =
+      this.themeFromSimpleColors(
+        theme,
+        primaryAdjusted,
+        secondaryAdjusted,
+        ui,
+        border,
+      );
 
     return {
       ui,
