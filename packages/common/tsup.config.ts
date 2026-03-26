@@ -8,6 +8,8 @@ export const tsup: Options = {
   splitting: true,
   target: "node18",
   // @ts-expect-error process is global in node
+  watch: process.env.WATCH === "true",
+  // @ts-expect-error process is global in node
   sourcemap: process.env.SOURCEMAP === "true",
   outExtension({ format }) {
     return {

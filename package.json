@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "build:watch": "cross-env WATCH=true turbo run build",
     "test": "cross-env SOURCEMAP=true turbo run test",
     "test:watch": "vitest",
     "format": "prettier --write .",

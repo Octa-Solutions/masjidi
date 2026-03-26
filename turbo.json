@@ -3,7 +3,7 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"],
-      "env": ["SOURCEMAP"],
+      "env": ["WATCH", "SOURCEMAP"],
       "cache": false
     },
     "test": {
