@@ -1,5 +1,11 @@
 # @masjidi/core
 
+## 1.3.0
+
+### Minor Changes
+
+- Support controlling daylight saving options
+
 ## 1.2.2
 
 ### Patch Changes
