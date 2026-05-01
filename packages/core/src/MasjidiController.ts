@@ -47,8 +47,8 @@ export type DaylightSavingOption =
   | { mode: typeof DaylightSavingMode.STRATEGY_OR_TIMEZONE }
   | {
       mode: typeof DaylightSavingMode.CUSTOM;
-      start: { month: number; date: number; hours: number; minutes: number };
-      end: { month: number; date: number; hours: number; minutes: number };
+      start: { month: number; day: number; hours: number; minutes: number };
+      end: { month: number; day: number; hours: number; minutes: number };
       offsetMinutes: number;
     };
 
@@ -138,15 +138,15 @@ export class MasjidiController extends EventListener<{
         const { start, end } = daylightSaving;
         const startDate = new Date(
           now.getFullYear(),
-          start.month,
-          start.date,
+          start.month - 1,
+          start.day,
           start.hours,
           start.minutes,
         );
         const endDate = new Date(
           now.getFullYear(),
-          end.month,
-          end.date,
+          end.month - 1,
+          end.day,
           end.hours,
           end.minutes,
         );
