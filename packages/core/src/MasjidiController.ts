@@ -158,9 +158,9 @@ export class MasjidiController extends EventListener<{
               : 0;
         } else {
           daylightSavingTimeOffset =
-            now >= endDate && now < startDate
-              ? 0
-              : daylightSaving.offsetMinutes;
+            now >= startDate || now < endDate
+              ? daylightSaving.offsetMinutes
+              : 0;
         }
 
         break;
